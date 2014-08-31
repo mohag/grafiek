@@ -1,0 +1,61 @@
+Github upload:
+--------------
+Removed Borland code (For Turbo Pascal - bgifont3.pas)
+
+Version 1.1
+-----------
+- Pcalcexp.pas : Delphi / FreePascal Exception & Math unit support
+- PCalcExp.pas : Added support for third variable, z.
+- Fixed bug that caused "e" not to be recognized as constant.
+- Cosec can now be shortend to csc
+- Added support for hyperbolic and inverse hyperbolic functions
+- Added script support
+- added support for ()() -> ()*()
+- added support for c() -> c*() (with c a constant)
+- Removed old graphs (parabola, hyperbola, straight line)
+- rearranged menu
+- removed "unlisted" feature
+- Fixed bug with negative square root
+- fixed a(rc)cos bug
+- Fixed unary minus support
+- Fixed "x(..)" crashing program
+- Translated user interface to English
+
+Version 1.0a
+------------
+- Intermediate release with improved pcalcexp from development version 1.1
+
+Version 1.0
+-----------
+- Added unlisted feature (press "P" at main menu)
+- Added credits
+- Calcexp replacement (Pcalcexp) used instead of calcexp
+- Invalid functions would not try to plot
+- "*" can now be left out between any constant and letter (except "E")
+- MUCH faster (takes +/- 1/3 of time to plot graph)
+- BGIs added to exe
+- Custom Vergelyking wys nou funksies en operatore wat gebruik kan word
+
+Version 0.99b
+-------------
+- fixed bug where program ignored points
+- made program change decimal commas to points
+- linemode handle asimptote reg
+- changed default detail to 50
+- enabled linemode by default
+- MANUAL is out of date!
+
+Version 0.99a
+-------------
+- Slash no longer needed at end of BGI path.
+- Asse nou op regte plekke (hopelik)
+- Manual added
+- Calculation source somewhat optimized
+- Progress indicator added (see manual.htm#custom)
+- exp(x) bug fixed
+- added support for leaving out * between constant and x
+- various bugs fixed
+
+Version 0.99
+------------
+First distributed version

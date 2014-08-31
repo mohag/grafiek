@@ -1,0 +1,984 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="af">
+<title>Grafiek User Manual</title>
+</head>
+
+<body bgcolor="#FFFFCC">
+
+<h1>Grafiek User's Manual</h1>
+
+<p>Copyright (c) 2003 <a href="mailto:gertvdb@global.co.za">Gert van den Berg</a>.<br>
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.2 or any later version
+published by the Free Software Foundation; with no Invariant Sections, no
+Front-Cover Texts, and no Back-Cover Texts.&nbsp; A copy of the license is
+included in the section entitled &quot;Lisensies&quot;.</p>
+
+<h2>Inhoud</h2>
+
+<p><a href="#Intro">Inleiding</a><br>
+<a href="#howtouse">Hoe om die program te gebruik</a><br>
+<a href="#settings">Verstellings<br>
+</a><a href="#lisensies">Lisensies</a></p>
+
+<h2><a name="Intro"></a>Inleiding</h2>
+<p>Hierdie program plot grafieke.&nbsp; Dit kan grafieke volgens vooraf bepaalde
+vergelykings plot of volgens 'n custom vergelyking.</p>
+<h2><a name="howtouse"></a>Hoe om die program te gebruik</h2>
+<p><a href="#Howtorun">Hoe om in die program in te gaan</a><br>
+<a href="#menusystem">Menu Stelsel<br>
+</a>&nbsp;&nbsp;&nbsp; <a href="#menuoptions">Menu Options</a></p>
+<h3><a name="Howtorun"></a>Hoe om in die program in te gaan</h3>
+<h4>Windows</h4>
+<p>1. Gaan in Windows Explorer in deur na&nbsp;</p>
+<p><b>Windows 95 - ME:</b> Start &gt; Programs &gt; Windows Explorer</p>
+<p><b>Windows XP: </b>Start &gt; All Programs &gt; Accessories &gt; Windows
+Explorer</p>
+<p><b>Alle weergawes van Windows na 95:</b> Hou die <font SIZE="4" face="Wingdings">ÿ</font>-knoppie
+in, druk E.</p>
+<p>2. Gaan na folder waar die program geïnstaleer is.</p>
+<p>3. Double click op &quot;grafiek&quot; (grafiek.exe as rekenaar gestel is om
+&quot;extensions&quot; te wys) met reghoekige icon van 'n &quot;window.&quot;</p>
+<p>4. U kan 'n &quot;shortcut&quot; na die program skep deur, in die meer
+onlangse weergawes van windows, daarop te regter click en te sê Sent to &gt;
+Desktop (Create Shortcut).</p>
+<h3><a name="menusystem"></a>Menu stelsel</h3>
+<p>Alle menus in hierdie program werk as volg:</p>
+
+<p>Om by 'n spesifieke opsie in te gaan, druk die karakter wat voor die opsie
+verskyn. Bv. Druk 1 by die &quot;Main Menu&quot; om die grafiekskerm skoon te
+maak.</p>
+
+<p>Om terug te gaan vanaf enige menu druk die Esc knoppie.</p>
+
+<p>Regs op die skerm by die Main Menu en die verstellings menu word 'n kort
+opsomming van die huidige verstellings gewys.</p>
+
+<h4><a name="menuoptions"></a>Menu opsies</h4>
+
+<h5>0 Wys Skerm</h5>
+
+<p>Hierdie opsie wys alle grafieke wat geplot is sedert die skerm skoongemaak
+is.&nbsp; Grafieke word nie outomaties gewys nadat dit geplot is nie.</p>
+
+<h5><a name="custom"></a>A Custom vergelyking</h5>
+
+<p>Dit word gebruik om 'n grafiek van 'n ander tipe as die vooraf bepaalde
+opsies (2-4) te plot.&nbsp; Dit word beïnvloed deur die verstellings vir detail
+en linemode. 'n Verduideliking van hierdie verstellings volg onder die hulp vir
+die verstellings.&nbsp;</p>
+
+<p>Indien hierdie opsie gekies word lyk die skerm soos volg:</p>
+<p><font face="Courier New">Tik asb. vergelyking in:</font></p>
+<p><font face="Courier New">&nbsp;y=_</font></p>
+<p>'n Funksie wat van die volgende lys van funksies en operators gebruik maak kan ingetik
+word: (Program wys ook lys van moontlikhede)</p>
+<table border="1" width="100%">
+  <tr>
+    <td><b>Funksie/Operator:</b></td>
+    <td><b>Wat doen dit:</b></td>
+    <td><b>Voorbeeld:</b></td>
+    <td><b>Notas:</b></td>
+  </tr>
+  <tr>
+    <td>x+y</td>
+    <td>Adds x and y</td>
+    <td>x+5</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>x-y</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>x*y</td>
+    <td>Multiply x and y</td>
+    <td>5*x</td>
+    <td>5tan(x), (x-2)(x-4), ens. werk nie. Gebruik 5*tan(x) ens. 5x werk
+      wel.(konstante staan reg voor die veranderlike)</td>
+  </tr>
+  <tr>
+    <td>x/y</td>
+    <td>Deel x deur y</td>
+    <td>10/x</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>sin(x)</td>
+    <td>&nbsp;</td>
+    <td>sin(x)</td>
+    <td>alle hoeke is in radiale</td>
+  </tr>
+  <tr>
+    <td>cos(x)</td>
+    <td>&nbsp;</td>
+    <td>cos(x)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>tan(x)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>cot(x)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ens.</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>asin(x)</td>
+    <td>bereken arcsin(bgsin) van x</td>
+    <td>asin(x)</td>
+    <td>werk nie reg vir x&lt;0</td>
+  </tr>
+  <tr>
+    <td>acos(x)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>atan(x)</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>abs(x)</td>
+    <td>Absolute waarde v x</td>
+    <td>abs(x)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>sqrt(x)</td>
+    <td>Square root of x</td>
+    <td>sqrt(x)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>x^y</td>
+    <td>x to power of y</td>
+    <td>x^3</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>ln(x)</td>
+    <td>natural log</td>
+    <td>ln(x)</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>log(x)</td>
+    <td>log x</td>
+    <td>log(x)</td>
+    <td>ln(x) is vinniger vir ander grondtalle</td>
+  </tr>
+  <tr>
+    <td>exp(x)</td>
+    <td>e^x</td>
+    <td>&nbsp;</td>
+    <td>e=2.7</td>
+  </tr>
+  <tr>
+    <td>pi</td>
+    <td>3.1415...</td>
+    <td>sin(pi/2-x)</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<p>Bv:&nbsp;&nbsp;&nbsp;&nbsp; abs(x^2-x-2)</p>
+<p style="margin-right: 0; margin-bottom: 0"><u>Baie Belangrik:</u></p>
+<p style="margin-top: 0">Lees asb. die afdeling oor die <a href="#settings">verstellings</a>
+en stel die verstellings reg voor u hiervan gebruik maak.</p>
+<p>Hierdie funksie kan lank neem om 'n grafiek te plot as die <a href="#detail">detail</a>
+hoog gestel is en u rekenaar taamlik stadig is.&nbsp; Indien u wil weet hoe ver
+die grafiek geplot is, kyk heel onder op die skerm.&nbsp; Daar is 'n klein rooi
+kolletjie(pixel) wat van beweeg om aan te dui hoe ver die grafiek geplot is.&nbsp; Dit
+vertikaal in lyn met die deel van die grafiek wat op die oomblik berken
+word.&nbsp; Hierdie program gaan voort om die waardes te bereken selfs al is dit
+nie op die skerm nie.&nbsp; Hierdie program bereken eers vanaf die Y-as na regs
+en daarna vanaf die Y-as na links.</p>
+<p>Desimale kommas word omgeskakel na desimale punte.&nbsp; Blokhakies ([]) word
+na gewone (()) hakies verander.</p>
+<p>Om 'n minus te gebruik net om aan te dui dat 'n getal negatief is word nie
+toegelaat nie.&nbsp; Vervang bv. (-3x +5) met (0-3x+5).&nbsp; (x+2)^2-5 sal
+egter reg werk.</p>
+<h5>2 tot 4 Reguitlyn, parabool, hiperbool</h5>
+<p>Hierdie opsies is heelwat vinniger as opsie A om die bogenoemde grafieke te
+plot.&nbsp; Dit is egter nie so buigbaar soos <a href="#custom">custom
+vergelyking</a> nie.</p>
+<p>Indien u hierdie opsies kies, wys die program 'n algemene vergelyking vir die
+gekose tipe grafiek en vra vir waardes vir al die veranderlikes.</p>
+<p>Alle veranderlikes is reële getalle.&nbsp; Indien u 'n ongeldige waarde
+intik (bv. iets wat 'n letter bevat) sal die program staak en u sal alle
+getekende grafieke verloor.</p>
+<h5>5 Verstellings</h5>
+<p>Maak die verstelling menu oop.&nbsp; Lees aparte afdeling oor verstellings
+vir inligting oor al die <a href="#settings">verstellings</a>.</p>
+<h5>6 Stel grafiek se kleur</h5>
+<p>Dit gee u vinnige toegang tot die <a href="#color">kleurverstelling</a>.</p>
+<h5>Esc Verlaat program</h5>
+<p>Hiedie opsie gaan uit die program uit.&nbsp; Alle grafieke gaan verlore.</p>
+<h2><a name="settings"></a>Verstellings</h2>
+<p>Hier kan u stel hoe die program grafieke plot.</p>
+<p>Regs op die verstellings menu word dir huidige verstellings aangedui.</p>
+<p><b><u>Waarskuwing: </u></b>Opsie 0-5 maak die grafiekskerm skoon.</p>
+<h3><a name="resetdefaults"></a>0 Reset defaults</h3>
+<p>Hierdie opsie stel al die grafiek verstellings terug na hulle default
+waardes:</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="50%"><b>Verstelling</b></td>
+    <td width="50%"><b>Waarde</b></td>
+  </tr>
+  <tr>
+    <td width="50%">Posisie van X-as</td>
+    <td width="50%">In die middel van die skerm</td>
+  </tr>
+  <tr>
+    <td width="50%">Posisie van Y-as</td>
+    <td width="50%">In die middel van skerm</td>
+  </tr>
+  <tr>
+    <td width="50%">Skaal</td>
+    <td width="50%">15</td>
+  </tr>
+  <tr>
+    <td width="50%">Kleur</td>
+    <td width="50%">10 (Liggroen)</td>
+  </tr>
+  <tr>
+    <td width="50%">Detail</td>
+    <td width="50%">50</td>
+  </tr>
+  <tr>
+    <td width="50%">Linemode</td>
+    <td width="50%">AAN</td>
+  </tr>
+</table>
+<p>LW: Hierdie opsie affekteer nie die verstellings vir die grafika drivers
+nie.&nbsp; Sien <a href="#Advanced">gevorderde verstellings</a>.</p>
+<h3>1 en 2 Stel posisie van X- en Y-asse na middel van skerm</h3>
+<p>Hierdie twee opsies kan gebruik word omdie posisie van die asse vinnig na
+hulle default waardes terug te stel.</p>
+<h3><a name="asposisie"></a>3 en 4 Stel posisie van asse</h3>
+<p>Hierdie verstellings stel die posisies van die onderskeie asse.&nbsp; Geldige
+waardes hang af van die video mode.&nbsp; Sien <a href="#Advanced">gevorderde
+verstellings</a> om die video mode te stel.</p>
+<p>Die waardes van hierdie verstellings word in pixels in getik.&nbsp; 'n Pixel
+is 'n &quot;kolletjie&quot; op die skerm.&nbsp; Vir die default video mode is
+die volgende waardes geldig:</p>
+<table border="1" width="100%">
+  <tr>
+    <td width="50%"><b>Verstelling:</b></td>
+    <td width="50%"><b>Waardes:</b></td>
+    <td width="50%"><b>Default:</b></td>
+  </tr>
+  <tr>
+    <td width="50%">Posisie van X-as</td>
+    <td width="50%">3-479</td>
+    <td width="50%">239</td>
+  </tr>
+  <tr>
+    <td width="50%">Posisie van Y-as</td>
+    <td width="50%">3-639</td>
+    <td width="50%">319</td>
+  </tr>
+</table>
+<h3><a name="skaal"></a>5 Stel skaal van grafiek</h3>
+<p>Hierdie verstelling verstel die skaal van die grafiek.&nbsp; Die skaal is in
+pixels per eenheid.&nbsp; As die skaal bv. 15 is is een 15 pixels regs van die
+Y-as, ens.</p>
+<p>'n Groter waarde hiervoor veroorsaak dus dat die blokkies op die grafiek
+groter is.</p>
+<h3><a name="color"></a>6 Stel die kleur van die grafiek</h3>
+<p>Hierdie opsie word gebruik om die kleur van die grafiek te verstel.&nbsp;
+Sodra u hier ingaan word 'n lys van kleure tesame met hul kodes gewys.&nbsp; Tik
+net die kode van die kleur wat u wil hê in.</p>
+<h3><a name="detail"></a>7 Stel detail van die grafiek</h3>
+<p>Hierdie verstelling is slegs van toepassing op &quot;custom vergelyking&quot;
+grafieke.</p>
+<p>Hierdie is die verstelling wat die grootste invloed op die spoed van die
+program het.</p>
+<p>Dit bepaal die hoeveelheid y-waardes wat vir elke pixel op die X-as bereken
+word.&nbsp; In die default video mode is daar 640 pixels op die X-as.&nbsp; Daar
+word dus 640*detail pixels bereken.&nbsp; Indien die detail op sy default
+verstelling van 50 is word daar dus 640*500 = 32 000 waardes bereken. Die
+metode wat gebruik word om dit te bereken is egter nie baie effektief nie.</p>
+<p>Op detail 500 het dit weergawe 0.99a ongeveer 9,5 sekondes geneem om tan(x) te plot op
+'n 1.67GHz <a href="http://www.amd.com">AMD</a> Athlon XP 2000+ met Windows XP
+op.&nbsp; Op 'n 486 40Mhz met DOS het dit egter 6 minute 40 sekondes geneem om
+dieselfde grafiek te plot.&nbsp; Dit is dus noodsaaklik om die regte verstelling
+vir u rekenaar te kry.</p>
+<p>Weergawe 1.0 is heelwat vinniger en neem slegs 2 minute 2 sekondes om tan(x)
+op dieselfde 40MHz 486 laptop te plot.</p>
+<p>Indien die detail egter te laag is sal die grafiek nie 'n ononderbroke lyn
+wees nie.&nbsp; Om hierdie verskynsel teë te werk is daar linemode (sien <a href="#linemode">onder</a>
+vir beskrywing.)</p>
+<p>Indien <a href="#linemode">linemode</a> aan is word dit aanbeveel dat die
+detail verlaag word na iets tussen 1 en 50.</p>
+<h3><a name="linemode"></a>8 Enable/Disable linemode</h3>
+<p>Hierdie verstelling is slegs van toepassing op die &quot;<a href="#custom">custom
+vergelyking</a>&quot; grafieke.</p>
+<p>Hierdie opsie word gebruik om linemode aan of af te skakel.&nbsp; Indien u
+hier ingaan word u gevra of u linemode wil aan of af skakel.&nbsp; Druk slegs J
+of Y vir Ja of N vir Nee.</p>
+<p>Indien linemode aangeskakel is word daar nog steeds detail waardes vir y vir
+elke pixel op die X-as bereken, daar word egter 'n lyn getrek van een pixel na
+die volgende.&nbsp; Sodoende kan 'n mooi grafiek maklik verkry word sonder om te
+lank te wag.&nbsp; Indien linemode aangeskakel word, word dit aanbeveel dat die <a href="#detail">detail</a>
+afgestel word.</p>
+<p>Dit word aanbeveel dat linemode ten alle tye aangeskakel bly.</p>
+<h3><a name="Advanced"></a>Gevorderde verstellings</h3>
+<p>Hierdie verstellings verskyn nie op die menu nie.</p>
+<h4>Path na BGI files</h4>
+<p>Hierdie program gebruik BGI (Borland Graphics Interface) graphics
+drivers.&nbsp; BGI drivers word saam met verkeie Borland DOS programerings tale
+verprei.&nbsp; Die BGI files behoort by hierdie program ingesluit te wees.&nbsp;
+Indien dit nie ingesluit is nie, download dit <a href="http://www.geocities.com/siliconvalley/horizon/2942/graph.zip">hier</a>,
+as die link links nie werk nie email my <a href="mailto:gertvdb@global.co.za">hier</a>.</p>
+<p>Die default verstelling is om die BGI file (VGA Driver) wat in die program se
+EXE ingesluit is te gebruik (1.0 en nuwer). 'n VESA driver wat resolutions van
+tot 1280x1024 support. Hierdie verstelling is
+slegs beskikbaar indien die program nie 'n BGI file in die verstelling se
+directory kry nie.</p>
+<h4>Graphics driver en mode</h4>
+<p>Indien Grafiek vanaf die MS-DOS prompt gerun word met die command-line
+parameter /G word, kan die graphics driver en video mode gekies word.</p>
+
+<p>Druk 0 vir die VESA driver (support tot 1280x1024 maar werk nie altyd reg met
+Windows XP nie) of 9 vir die default VGA driver.&nbsp; Kies daarna 'n
+resolution.&nbsp; Hierdie program is getoets in 640x480 met die VGA driver.
+Indien u probleme het met die VESA driver gebruik die VGA driver teen 640x480.</p>
+<h2><a name="lisensies"></a>Lisensies</h2>
+<p>Program<br>
+&nbsp;&nbsp;&nbsp; <a href="#gpl">GNU General Public License</a><br>
+Manual<br>
+&nbsp;&nbsp;&nbsp; <a href="#fdl">GNU Free Documentation License</a></p>
+<h3>Program</h3>
+<p>Hierdie program word onder die terme van die Free Software Foundation se GNU
+General Public License Version 2 versprei.&nbsp; Sien onder vir meer
+besonderhede.</p>
+<h4><a name="gpl"></a>GNU GENERAL PUBLIC LICENSE</h4>
+<p>Version 2, June 1991</p>
+<pre>Copyright (C) 1989, 1991 Free Software Foundation, Inc.  
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+</pre>
+<h4>Preamble</h4>
+<p>The licenses for most software are designed to take away your freedom to
+share and change it. By contrast, the GNU General Public License is intended to
+guarantee your freedom to share and change free software--to make sure the
+software is free for all its users. This General Public License applies to most
+of the Free Software Foundation's software and to any other program whose
+authors commit to using it. (Some other Free Software Foundation software is
+covered by the GNU Library General Public License instead.) You can apply it to
+your programs, too.</p>
+<p>When we speak of free software, we are referring to freedom, not price. Our
+General Public Licenses are designed to make sure that you have the freedom to
+distribute copies of free software (and charge for this service if you wish),
+that you receive source code or can get it if you want it, that you can change
+the software or use pieces of it in new free programs; and that you know you can
+do these things.</p>
+<p>To protect your rights, we need to make restrictions that forbid anyone to
+deny you these rights or to ask you to surrender the rights. These restrictions
+translate to certain responsibilities for you if you distribute copies of the
+software, or if you modify it.</p>
+<p>For example, if you distribute copies of such a program, whether gratis or
+for a fee, you must give the recipients all the rights that you have. You must
+make sure that they, too, receive or can get the source code. And you must show
+them these terms so they know their rights.</p>
+<p>We protect your rights with two steps: (1) copyright the software, and (2)
+offer you this license which gives you legal permission to copy, distribute
+and/or modify the software.</p>
+<p>Also, for each author's protection and ours, we want to make certain that
+everyone understands that there is no warranty for this free software. If the
+software is modified by someone else and passed on, we want its recipients to
+know that what they have is not the original, so that any problems introduced by
+others will not reflect on the original authors' reputations.</p>
+<p>Finally, any free program is threatened constantly by software patents. We
+wish to avoid the danger that redistributors of a free program will individually
+obtain patent licenses, in effect making the program proprietary. To prevent
+this, we have made it clear that any patent must be licensed for everyone's free
+use or not licensed at all.</p>
+<p>The precise terms and conditions for copying, distribution and modification
+follow.</p>
+<h4>TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</h4>
+<p><strong>0.</strong> This License applies to any program or other work which
+contains a notice placed by the copyright holder saying it may be distributed
+under the terms of this General Public License. The &quot;Program&quot;, below,
+refers to any such program or work, and a &quot;work based on the Program&quot;
+means either the Program or any derivative work under copyright law: that is to
+say, a work containing the Program or a portion of it, either verbatim or with
+modifications and/or translated into another language. (Hereinafter, translation
+is included without limitation in the term &quot;modification&quot;.) Each
+licensee is addressed as &quot;you&quot;.
+<p>Activities other than copying, distribution and modification are not covered
+by this License; they are outside its scope. The act of running the Program is
+not restricted, and the output from the Program is covered only if its contents
+constitute a work based on the Program (independent of having been made by
+running the Program). Whether that is true depends on what the Program does.
+<p><strong>1.</strong> You may copy and distribute verbatim copies of the
+Program's source code as you receive it, in any medium, provided that you
+conspicuously and appropriately publish on each copy an appropriate copyright
+notice and disclaimer of warranty; keep intact all the notices that refer to
+this License and to the absence of any warranty; and give any other recipients
+of the Program a copy of this License along with the Program.
+<p>You may charge a fee for the physical act of transferring a copy, and you may
+at your option offer warranty protection in exchange for a fee.
+<p><strong>2.</strong> You may modify your copy or copies of the Program or any
+portion of it, thus forming a work based on the Program, and copy and distribute
+such modifications or work under the terms of Section 1 above, provided that you
+also meet all of these conditions:
+<p>&nbsp;
+<ul>
+  <li><strong>a)</strong> You must cause the modified files to carry prominent
+    notices stating that you changed the files and the date of any change.
+    <p>&nbsp;</p>
+  <li><strong>b)</strong> You must cause any work that you distribute or
+    publish, that in whole or in part contains or is derived from the Program or
+    any part thereof, to be licensed as a whole at no charge to all third
+    parties under the terms of this License.
+    <p>&nbsp;</p>
+  <li><strong>c)</strong> If the modified program normally reads commands
+    interactively when run, you must cause it, when started running for such
+    interactive use in the most ordinary way, to print or display an
+    announcement including an appropriate copyright notice and a notice that
+    there is no warranty (or else, saying that you provide a warranty) and that
+    users may redistribute the program under these conditions, and telling the
+    user how to view a copy of this License. (Exception: if the Program itself
+    is interactive but does not normally print such an announcement, your work
+    based on the Program is not required to print an announcement.)</li>
+</ul>
+These requirements apply to the modified work as a whole. If identifiable
+sections of that work are not derived from the Program, and can be reasonably
+considered independent and separate works in themselves, then this License, and
+its terms, do not apply to those sections when you distribute them as separate
+works. But when you distribute the same sections as part of a whole which is a
+work based on the Program, the distribution of the whole must be on the terms of
+this License, whose permissions for other licensees extend to the entire whole,
+and thus to each and every part regardless of who wrote it.
+<p>Thus, it is not the intent of this section to claim rights or contest your
+rights to work written entirely by you; rather, the intent is to exercise the
+right to control the distribution of derivative or collective works based on the
+Program.
+<p>In addition, mere aggregation of another work not based on the Program with
+the Program (or with a work based on the Program) on a volume of a storage or
+distribution medium does not bring the other work under the scope of this
+License.
+<p><strong>3.</strong> You may copy and distribute the Program (or a work based
+on it, under Section 2) in object code or executable form under the terms of
+Sections 1 and 2 above provided that you also do one of the following: <!-- we use this doubled UL to get the sub-sections indented, -->
+<!-- while making the bullets as unobvious as possible. -->
+<ul>
+  <li><strong>a)</strong> Accompany it with the complete corresponding
+    machine-readable source code, which must be distributed under the terms of
+    Sections 1 and 2 above on a medium customarily used for software
+    interchange; or,
+    <p>&nbsp;</p>
+  <li><strong>b)</strong> Accompany it with a written offer, valid for at least
+    three years, to give any third party, for a charge no more than your cost of
+    physically performing source distribution, a complete machine-readable copy
+    of the corresponding source code, to be distributed under the terms of
+    Sections 1 and 2 above on a medium customarily used for software
+    interchange; or,
+    <p>&nbsp;</p>
+  <li><strong>c)</strong> Accompany it with the information you received as to
+    the offer to distribute corresponding source code. (This alternative is
+    allowed only for noncommercial distribution and only if you received the
+    program in object code or executable form with such an offer, in accord with
+    Subsection b above.)</li>
+</ul>
+The source code for a work means the preferred form of the work for making
+modifications to it. For an executable work, complete source code means all the
+source code for all modules it contains, plus any associated interface
+definition files, plus the scripts used to control compilation and installation
+of the executable. However, as a special exception, the source code distributed
+need not include anything that is normally distributed (in either source or
+binary form) with the major components (compiler, kernel, and so on) of the
+operating system on which the executable runs, unless that component itself
+accompanies the executable.
+<p>If distribution of executable or object code is made by offering access to
+copy from a designated place, then offering equivalent access to copy the source
+code from the same place counts as distribution of the source code, even though
+third parties are not compelled to copy the source along with the object code.
+<p><strong>4.</strong> You may not copy, modify, sublicense, or distribute the
+Program except as expressly provided under this License. Any attempt otherwise
+to copy, modify, sublicense or distribute the Program is void, and will
+automatically terminate your rights under this License. However, parties who
+have received copies, or rights, from you under this License will not have their
+licenses terminated so long as such parties remain in full compliance.
+<p><strong>5.</strong> You are not required to accept this License, since you
+have not signed it. However, nothing else grants you permission to modify or
+distribute the Program or its derivative works. These actions are prohibited by
+law if you do not accept this License. Therefore, by modifying or distributing
+the Program (or any work based on the Program), you indicate your acceptance of
+this License to do so, and all its terms and conditions for copying,
+distributing or modifying the Program or works based on it.
+<p><strong>6.</strong> Each time you redistribute the Program (or any work based
+on the Program), the recipient automatically receives a license from the
+original licensor to copy, distribute or modify the Program subject to these
+terms and conditions. You may not impose any further restrictions on the
+recipients' exercise of the rights granted herein. You are not responsible for
+enforcing compliance by third parties to this License.
+<p><strong>7.</strong> If, as a consequence of a court judgment or allegation of
+patent infringement or for any other reason (not limited to patent issues),
+conditions are imposed on you (whether by court order, agreement or otherwise)
+that contradict the conditions of this License, they do not excuse you from the
+conditions of this License. If you cannot distribute so as to satisfy
+simultaneously your obligations under this License and any other pertinent
+obligations, then as a consequence you may not distribute the Program at all.
+For example, if a patent license would not permit royalty-free redistribution of
+the Program by all those who receive copies directly or indirectly through you,
+then the only way you could satisfy both it and this License would be to refrain
+entirely from distribution of the Program.
+<p>If any portion of this section is held invalid or unenforceable under any
+particular circumstance, the balance of the section is intended to apply and the
+section as a whole is intended to apply in other circumstances.
+<p>It is not the purpose of this section to induce you to infringe any patents
+or other property right claims or to contest validity of any such claims; this
+section has the sole purpose of protecting the integrity of the free software
+distribution system, which is implemented by public license practices. Many
+people have made generous contributions to the wide range of software
+distributed through that system in reliance on consistent application of that
+system; it is up to the author/donor to decide if he or she is willing to
+distribute software through any other system and a licensee cannot impose that
+choice.
+<p>This section is intended to make thoroughly clear what is believed to be a
+consequence of the rest of this License.
+<p><strong>8.</strong> If the distribution and/or use of the Program is
+restricted in certain countries either by patents or by copyrighted interfaces,
+the original copyright holder who places the Program under this License may add
+an explicit geographical distribution limitation excluding those countries, so
+that distribution is permitted only in or among countries not thus excluded. In
+such case, this License incorporates the limitation as if written in the body of
+this License.
+<p><strong>9.</strong> The Free Software Foundation may publish revised and/or
+new versions of the General Public License from time to time. Such new versions
+will be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+<p>Each version is given a distinguishing version number. If the Program
+specifies a version number of this License which applies to it and &quot;any
+later version&quot;, you have the option of following the terms and conditions
+either of that version or of any later version published by the Free Software
+Foundation. If the Program does not specify a version number of this License,
+you may choose any version ever published by the Free Software Foundation.
+<p><strong>10.</strong> If you wish to incorporate parts of the Program into
+other free programs whose distribution conditions are different, write to the
+author to ask for permission. For software which is copyrighted by the Free
+Software Foundation, write to the Free Software Foundation; we sometimes make
+exceptions for this. Our decision will be guided by the two goals of preserving
+the free status of all derivatives of our free software and of promoting the
+sharing and reuse of software generally.
+<p><strong>NO WARRANTY</strong></p>
+<p><strong>11.</strong> BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS
+NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE
+QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE
+DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+<p><strong>12.</strong> IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED
+TO IN WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
+AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
+DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT
+LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+<p>&nbsp;
+<h4>END OF TERMS AND CONDITIONS</h4>
+<h4>How to Apply These Terms to Your New Programs</h4>
+<p>If you develop a new program, and you want it to be of the greatest possible
+use to the public, the best way to achieve this is to make it free software
+which everyone can redistribute and change under these terms.</p>
+<p>To do so, attach the following notices to the program. It is safest to attach
+them to the start of each source file to most effectively convey the exclusion
+of warranty; and each file should have at least the &quot;copyright&quot; line
+and a pointer to where the full notice is found.</p>
+<pre><var>one line to give the program's name and an idea of what it does.</var>
+Copyright (C) <var>yyyy</var>  <var>name of author</var>
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+</pre>
+<p>Also add information on how to contact you by electronic and paper mail.</p>
+<p>If the program is interactive, make it output a short notice like this when
+it starts in an interactive mode:</p>
+<pre>Gnomovision version 69, Copyright (C) <var>year</var> <var>name of author</var>
+Gnomovision comes with ABSOLUTELY NO WARRANTY; for details
+type `show w'.  This is free software, and you are welcome
+to redistribute it under certain conditions; type `show c' 
+for details.
+</pre>
+<p>The hypothetical commands <samp>`show w'</samp> and <samp>`show c'</samp>
+should show the appropriate parts of the General Public License. Of course, the
+commands you use may be called something other than <samp>`show w'</samp> and <samp>`show
+c'</samp>; they could even be mouse-clicks or menu items--whatever suits your
+program.</p>
+<p>You should also get your employer (if you work as a programmer) or your
+school, if any, to sign a &quot;copyright disclaimer&quot; for the program, if
+necessary. Here is a sample; alter the names:</p>
+<pre>Yoyodyne, Inc., hereby disclaims all copyright
+interest in the program `Gnomovision'
+(which makes passes at compilers) written 
+by James Hacker.
+
+<var>signature of Ty Coon</var>, 1 April 1989
+Ty Coon, President of Vice
+</pre>
+<p>This General Public License does not permit incorporating your program into
+proprietary programs. If your program is a subroutine library, you may consider
+it more useful to permit linking proprietary applications with the library. If
+this is what you want to do, use the GNU Library General Public License instead
+of this License.</p>
+<p>&nbsp;</p>
+<h3><a name="fdl"></a>GNU Free Documentation License</h3>
+<p>Version 1.2, November 2002
+<p>&nbsp;
+<pre>Copyright (C) 2000,2001,2002  Free Software Foundation, Inc.
+59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+</pre>
+<p><strong>0. PREAMBLE</strong>
+<p>The purpose of this License is to make a manual, textbook, or other
+functional and useful document &quot;free&quot; in the sense of freedom: to
+assure everyone the effective freedom to copy and redistribute it, with or
+without modifying it, either commercially or noncommercially. Secondarily, this
+License preserves for the author and publisher a way to get credit for their
+work, while not being considered responsible for modifications made by others.
+<p>This License is a kind of &quot;copyleft&quot;, which means that derivative
+works of the document must themselves be free in the same sense. It complements
+the GNU General Public License, which is a copyleft license designed for free
+software.
+<p>We have designed this License in order to use it for manuals for free
+software, because free software needs free documentation: a free program should
+come with manuals providing the same freedoms that the software does. But this
+License is not limited to software manuals; it can be used for any textual work,
+regardless of subject matter or whether it is published as a printed book. We
+recommend this License principally for works whose purpose is instruction or
+reference.
+<p><strong>1. APPLICABILITY AND DEFINITIONS</strong>
+<p>This License applies to any manual or other work, in any medium, that
+contains a notice placed by the copyright holder saying it can be distributed
+under the terms of this License. Such a notice grants a world-wide, royalty-free
+license, unlimited in duration, to use that work under the conditions stated
+herein. The &quot;Document&quot;, below, refers to any such manual or work. Any
+member of the public is a licensee, and is addressed as &quot;you&quot;. You
+accept the license if you copy, modify or distribute the work in a way requiring
+permission under copyright law.
+<p>A &quot;Modified Version&quot; of the Document means any work containing the
+Document or a portion of it, either copied verbatim, or with modifications
+and/or translated into another language.
+<p>A &quot;Secondary Section&quot; is a named appendix or a front-matter section
+of the Document that deals exclusively with the relationship of the publishers
+or authors of the Document to the Document's overall subject (or to related
+matters) and contains nothing that could fall directly within that overall
+subject. (Thus, if the Document is in part a textbook of mathematics, a
+Secondary Section may not explain any mathematics.) The relationship could be a
+matter of historical connection with the subject or with related matters, or of
+legal, commercial, philosophical, ethical or political position regarding them.
+<p>The &quot;Invariant Sections&quot; are certain Secondary Sections whose
+titles are designated, as being those of Invariant Sections, in the notice that
+says that the Document is released under this License. If a section does not fit
+the above definition of Secondary then it is not allowed to be designated as
+Invariant. The Document may contain zero Invariant Sections. If the Document
+does not identify any Invariant Sections then there are none.
+<p>The &quot;Cover Texts&quot; are certain short passages of text that are
+listed, as Front-Cover Texts or Back-Cover Texts, in the notice that says that
+the Document is released under this License. A Front-Cover Text may be at most 5
+words, and a Back-Cover Text may be at most 25 words.
+<p>A &quot;Transparent&quot; copy of the Document means a machine-readable copy,
+represented in a format whose specification is available to the general public,
+that is suitable for revising the document straightforwardly with generic text
+editors or (for images composed of pixels) generic paint programs or (for
+drawings) some widely available drawing editor, and that is suitable for input
+to text formatters or for automatic translation to a variety of formats suitable
+for input to text formatters. A copy made in an otherwise Transparent file
+format whose markup, or absence of markup, has been arranged to thwart or
+discourage subsequent modification by readers is not Transparent. An image
+format is not Transparent if used for any substantial amount of text. A copy
+that is not &quot;Transparent&quot; is called &quot;Opaque&quot;.
+<p>Examples of suitable formats for Transparent copies include plain ASCII
+without markup, Texinfo input format, LaTeX input format, SGML or XML using a
+publicly available DTD, and standard-conforming simple HTML, PostScript or PDF
+designed for human modification. Examples of transparent image formats include
+PNG, XCF and JPG. Opaque formats include proprietary formats that can be read
+and edited only by proprietary word processors, SGML or XML for which the DTD
+and/or processing tools are not generally available, and the machine-generated
+HTML, PostScript or PDF produced by some word processors for output purposes
+only.
+<p>The &quot;Title Page&quot; means, for a printed book, the title page itself,
+plus such following pages as are needed to hold, legibly, the material this
+License requires to appear in the title page. For works in formats which do not
+have any title page as such, &quot;Title Page&quot; means the text near the most
+prominent appearance of the work's title, preceding the beginning of the body of
+the text.
+<p>A section &quot;Entitled XYZ&quot; means a named subunit of the Document
+whose title either is precisely XYZ or contains XYZ in parentheses following
+text that translates XYZ in another language. (Here XYZ stands for a specific
+section name mentioned below, such as &quot;Acknowledgements&quot;,
+&quot;Dedications&quot;, &quot;Endorsements&quot;, or &quot;History&quot;.) To
+&quot;Preserve the Title&quot; of such a section when you modify the Document
+means that it remains a section &quot;Entitled XYZ&quot; according to this
+definition.
+<p>The Document may include Warranty Disclaimers next to the notice which states
+that this License applies to the Document. These Warranty Disclaimers are
+considered to be included by reference in this License, but only as regards
+disclaiming warranties: any other implication that these Warranty Disclaimers
+may have is void and has no effect on the meaning of this License.
+<p><strong>2. VERBATIM COPYING</strong>
+<p>You may copy and distribute the Document in any medium, either commercially
+or noncommercially, provided that this License, the copyright notices, and the
+license notice saying this License applies to the Document are reproduced in all
+copies, and that you add no other conditions whatsoever to those of this
+License. You may not use technical measures to obstruct or control the reading
+or further copying of the copies you make or distribute. However, you may accept
+compensation in exchange for copies. If you distribute a large enough number of
+copies you must also follow the conditions in section 3.
+<p>You may also lend copies, under the same conditions stated above, and you may
+publicly display copies.
+<p><strong>3. COPYING IN QUANTITY</strong>
+<p>If you publish printed copies (or copies in media that commonly have printed
+covers) of the Document, numbering more than 100, and the Document's license
+notice requires Cover Texts, you must enclose the copies in covers that carry,
+clearly and legibly, all these Cover Texts: Front-Cover Texts on the front
+cover, and Back-Cover Texts on the back cover. Both covers must also clearly and
+legibly identify you as the publisher of these copies. The front cover must
+present the full title with all words of the title equally prominent and
+visible. You may add other material on the covers in addition. Copying with
+changes limited to the covers, as long as they preserve the title of the
+Document and satisfy these conditions, can be treated as verbatim copying in
+other respects.
+<p>If the required texts for either cover are too voluminous to fit legibly, you
+should put the first ones listed (as many as fit reasonably) on the actual
+cover, and continue the rest onto adjacent pages.
+<p>If you publish or distribute Opaque copies of the Document numbering more
+than 100, you must either include a machine-readable Transparent copy along with
+each Opaque copy, or state in or with each Opaque copy a computer-network
+location from which the general network-using public has access to download
+using public-standard network protocols a complete Transparent copy of the
+Document, free of added material. If you use the latter option, you must take
+reasonably prudent steps, when you begin distribution of Opaque copies in
+quantity, to ensure that this Transparent copy will remain thus accessible at
+the stated location until at least one year after the last time you distribute
+an Opaque copy (directly or through your agents or retailers) of that edition to
+the public.
+<p>It is requested, but not required, that you contact the authors of the
+Document well before redistributing any large number of copies, to give them a
+chance to provide you with an updated version of the Document.
+<p><strong>4. MODIFICATIONS</strong>
+<p>You may copy and distribute a Modified Version of the Document under the
+conditions of sections 2 and 3 above, provided that you release the Modified
+Version under precisely this License, with the Modified Version filling the role
+of the Document, thus licensing distribution and modification of the Modified
+Version to whoever possesses a copy of it. In addition, you must do these things
+in the Modified Version:
+<p>&nbsp;
+<ul>
+  <li><strong>A.</strong> Use in the Title Page (and on the covers, if any) a
+    title distinct from that of the Document, and from those of previous
+    versions (which should, if there were any, be listed in the History section
+    of the Document). You may use the same title as a previous version if the
+    original publisher of that version gives permission.
+  <li><strong>B.</strong> List on the Title Page, as authors, one or more
+    persons or entities responsible for authorship of the modifications in the
+    Modified Version, together with at least five of the principal authors of
+    the Document (all of its principal authors, if it has fewer than five),
+    unless they release you from this requirement.
+  <li><strong>C.</strong> State on the Title page the name of the publisher of
+    the Modified Version, as the publisher.
+  <li><strong>D.</strong> Preserve all the copyright notices of the Document.
+  <li><strong>E.</strong> Add an appropriate copyright notice for your
+    modifications adjacent to the other copyright notices.
+  <li><strong>F.</strong> Include, immediately after the copyright notices, a
+    license notice giving the public permission to use the Modified Version
+    under the terms of this License, in the form shown in the Addendum below.
+  <li><strong>G.</strong> Preserve in that license notice the full lists of
+    Invariant Sections and required Cover Texts given in the Document's license
+    notice.
+  <li><strong>H.</strong> Include an unaltered copy of this License.
+  <li><strong>I.</strong> Preserve the section Entitled &quot;History&quot;,
+    Preserve its Title, and add to it an item stating at least the title, year,
+    new authors, and publisher of the Modified Version as given on the Title
+    Page. If there is no section Entitled &quot;History&quot; in the Document,
+    create one stating the title, year, authors, and publisher of the Document
+    as given on its Title Page, then add an item describing the Modified Version
+    as stated in the previous sentence.
+  <li><strong>J.</strong> Preserve the network location, if any, given in the
+    Document for public access to a Transparent copy of the Document, and
+    likewise the network locations given in the Document for previous versions
+    it was based on. These may be placed in the &quot;History&quot; section. You
+    may omit a network location for a work that was published at least four
+    years before the Document itself, or if the original publisher of the
+    version it refers to gives permission.
+  <li><strong>K.</strong> For any section Entitled &quot;Acknowledgements&quot;
+    or &quot;Dedications&quot;, Preserve the Title of the section, and preserve
+    in the section all the substance and tone of each of the contributor
+    acknowledgements and/or dedications given therein.
+  <li><strong>L.</strong> Preserve all the Invariant Sections of the Document,
+    unaltered in their text and in their titles. Section numbers or the
+    equivalent are not considered part of the section titles.
+  <li><strong>M.</strong> Delete any section Entitled &quot;Endorsements&quot;.
+    Such a section may not be included in the Modified Version.
+  <li><strong>N.</strong> Do not retitle any existing section to be Entitled
+    &quot;Endorsements&quot; or to conflict in title with any Invariant Section.
+  <li><strong>O.</strong> Preserve any Warranty Disclaimers.</li>
+</ul>
+<p>If the Modified Version includes new front-matter sections or appendices that
+qualify as Secondary Sections and contain no material copied from the Document,
+you may at your option designate some or all of these sections as invariant. To
+do this, add their titles to the list of Invariant Sections in the Modified
+Version's license notice. These titles must be distinct from any other section
+titles.
+<p>You may add a section Entitled &quot;Endorsements&quot;, provided it contains
+nothing but endorsements of your Modified Version by various parties--for
+example, statements of peer review or that the text has been approved by an
+organization as the authoritative definition of a standard.
+<p>You may add a passage of up to five words as a Front-Cover Text, and a
+passage of up to 25 words as a Back-Cover Text, to the end of the list of Cover
+Texts in the Modified Version. Only one passage of Front-Cover Text and one of
+Back-Cover Text may be added by (or through arrangements made by) any one
+entity. If the Document already includes a cover text for the same cover,
+previously added by you or by arrangement made by the same entity you are acting
+on behalf of, you may not add another; but you may replace the old one, on
+explicit permission from the previous publisher that added the old one.
+<p>The author(s) and publisher(s) of the Document do not by this License give
+permission to use their names for publicity for or to assert or imply
+endorsement of any Modified Version.
+<p><strong>5. COMBINING DOCUMENTS</strong>
+<p>You may combine the Document with other documents released under this
+License, under the terms defined in section 4 above for modified versions,
+provided that you include in the combination all of the Invariant Sections of
+all of the original documents, unmodified, and list them all as Invariant
+Sections of your combined work in its license notice, and that you preserve all
+their Warranty Disclaimers.
+<p>The combined work need only contain one copy of this License, and multiple
+identical Invariant Sections may be replaced with a single copy. If there are
+multiple Invariant Sections with the same name but different contents, make the
+title of each such section unique by adding at the end of it, in parentheses,
+the name of the original author or publisher of that section if known, or else a
+unique number. Make the same adjustment to the section titles in the list of
+Invariant Sections in the license notice of the combined work.
+<p>In the combination, you must combine any sections Entitled
+&quot;History&quot; in the various original documents, forming one section
+Entitled &quot;History&quot;; likewise combine any sections Entitled
+&quot;Acknowledgements&quot;, and any sections Entitled &quot;Dedications&quot;.
+You must delete all sections Entitled &quot;Endorsements.&quot;
+<p><strong>6. COLLECTIONS OF DOCUMENTS</strong>
+<p>You may make a collection consisting of the Document and other documents
+released under this License, and replace the individual copies of this License
+in the various documents with a single copy that is included in the collection,
+provided that you follow the rules of this License for verbatim copying of each
+of the documents in all other respects.
+<p>You may extract a single document from such a collection, and distribute it
+individually under this License, provided you insert a copy of this License into
+the extracted document, and follow this License in all other respects regarding
+verbatim copying of that document.
+<p><strong>7. AGGREGATION WITH INDEPENDENT WORKS</strong>
+<p>A compilation of the Document or its derivatives with other separate and
+independent documents or works, in or on a volume of a storage or distribution
+medium, is called an &quot;aggregate&quot; if the copyright resulting from the
+compilation is not used to limit the legal rights of the compilation's users
+beyond what the individual works permit. When the Document is included in an
+aggregate, this License does not apply to the other works in the aggregate which
+are not themselves derivative works of the Document.
+<p>If the Cover Text requirement of section 3 is applicable to these copies of
+the Document, then if the Document is less than one half of the entire
+aggregate, the Document's Cover Texts may be placed on covers that bracket the
+Document within the aggregate, or the electronic equivalent of covers if the
+Document is in electronic form. Otherwise they must appear on printed covers
+that bracket the whole aggregate.
+<p><strong>8. TRANSLATION</strong>
+<p>Translation is considered a kind of modification, so you may distribute
+translations of the Document under the terms of section 4. Replacing Invariant
+Sections with translations requires special permission from their copyright
+holders, but you may include translations of some or all Invariant Sections in
+addition to the original versions of these Invariant Sections. You may include a
+translation of this License, and all the license notices in the Document, and
+any Warranty Disclaimers, provided that you also include the original English
+version of this License and the original versions of those notices and
+disclaimers. In case of a disagreement between the translation and the original
+version of this License or a notice or disclaimer, the original version will
+prevail.
+<p>If a section in the Document is Entitled &quot;Acknowledgements&quot;,
+&quot;Dedications&quot;, or &quot;History&quot;, the requirement (section 4) to
+Preserve its Title (section 1) will typically require changing the actual title.
+<p><strong>9. TERMINATION</strong>
+<p>You may not copy, modify, sublicense, or distribute the Document except as
+expressly provided for under this License. Any other attempt to copy, modify,
+sublicense or distribute the Document is void, and will automatically terminate
+your rights under this License. However, parties who have received copies, or
+rights, from you under this License will not have their licenses terminated so
+long as such parties remain in full compliance.
+<p><strong>10. FUTURE REVISIONS OF THIS LICENSE</strong>
+<p>The Free Software Foundation may publish new, revised versions of the GNU
+Free Documentation License from time to time. Such new versions will be similar
+in spirit to the present version, but may differ in detail to address new
+problems or concerns. See http://www.gnu.org/copyleft/.
+<p>Each version of the License is given a distinguishing version number. If the
+Document specifies that a particular numbered version of this License &quot;or
+any later version&quot; applies to it, you have the option of following the
+terms and conditions either of that specified version or of any later version
+that has been published (not as a draft) by the Free Software Foundation. If the
+Document does not specify a version number of this License, you may choose any
+version ever published (not as a draft) by the Free Software Foundation.
+<p>&nbsp;
+<h4>How to use this License for your documents</h4>
+<p>To use this License in a document you have written, include a copy of the
+License in the document and put the following copyright and license notices just
+after the title page:
+<p>&nbsp;
+<pre>      Copyright (c)  YEAR  YOUR NAME.
+      Permission is granted to copy, distribute and/or modify this document
+      under the terms of the GNU Free Documentation License, Version 1.2
+      or any later version published by the Free Software Foundation;
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+	 Texts.  A copy of the license is included in the section entitled &quot;GNU
+      Free Documentation License&quot;.
+</pre>
+<p>If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
+replace the &quot;with...Texts.&quot; line with this:
+<p>&nbsp;
+<pre>    with the Invariant Sections being LIST THEIR TITLES, with the
+    Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
+</pre>
+<p>If you have Invariant Sections without Cover Texts, or some other combination
+of the three, merge those two alternatives to suit the situation.
+<p>If your document contains nontrivial examples of program code, we recommend
+releasing these examples in parallel under your choice of free software license,
+such as the GNU General Public License, to permit their use in free software.</p>
+
+</body>
+
+</html>

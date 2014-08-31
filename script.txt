@@ -1,0 +1,62 @@
+View in Notepad with word wrap enabled
+
+Version 1.1 and newer of Grafiek includes support for scripts.  Settings changed in scripts will not affect the settings as set from the user interface.
+
+Format of scripts
+-----------------
+
+All scripts are plain-text files starting with the following line:
+GRAPHSCRIPT
+
+Items on [] is optional
+
+The rest of the lines can start with one of the following characters:
+ C to set the color of the graph
+  Format: C <number of color> e.g. C 12
+
+ D to set the detail of the graph
+  Format: D <detail> e.g. D 50
+
+ L to enable/disable linemode
+  Format: L <"1" to enable, "0" to disable or "T" to toggle> e.g. L 1
+
+ S to set the scale of the graph.
+  Format: S <Scale> e.g. S 15
+
+ X to set position of X-axis.
+  Format X <Position of X-axis in pixels from the top or C for center of screen> e.g. X 239
+
+ Y to set position of Y-axis.
+  Format Y <Position of Y-axis in pixels from left or C for center of screen> e.g. Y 319
+
+ CLS to clear the screen
+  e.g. CLS
+
+ P to plot a graph
+  Format: P <equation of graph>[|<minimum value>|<maximum value>] e.g. P 2x+3|-2|5/2
+
+ ; for comment.  Must be at start of line.
+  e.g. ;Set color to green
+
+Example of script:
+------------------
+GRAPHSCRIPT
+;This script plots a red heart to the screen
+C 12
+;Set color of graph to red
+X C
+Y C
+;Set X- and Y-axis to center of screen
+S 15
+;Set scale to 15
+D 15
+;Detail to 15
+L 1
+;Linemode ON
+CLS
+;Clears screen
+P sqrt(100-x^2)+abs(x)|-10|10
+; Equation is "sqrt(100-x^2)+abs(x)" minimum value in domain in -10 max value in domain is 10
+P -sqrt(100-x^2)+abs(x)|-10|10
+;Plots the heart
+;<End of example>
