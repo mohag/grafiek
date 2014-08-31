@@ -3,6 +3,11 @@ grafiek
 
 A graphing program I wrote a long time ago...
 
+PCalcExp
+========
+
+PCalcExp is a stack-based parser for equasions, that might be useful outside this application as well.
+
 Grafiek version 1.1 README
 --------------------------
 See version.txt for updates in this version.
