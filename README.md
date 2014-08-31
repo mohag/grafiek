@@ -3,6 +3,8 @@ grafiek
 
 A graphing program I wrote a long time ago...
 
+Seems like I was busy translating the UI to English under the name "DosPlot"
+
 PCalcExp
 ========
 
