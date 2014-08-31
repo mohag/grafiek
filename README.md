@@ -5,10 +5,21 @@ A graphing program I wrote a long time ago...
 
 Seems like I was busy translating the UI to English under the name "DosPlot"
 
+Compiling:
+It does not currently compile for Linux.
+
+I might do some tests for other targets...
+
 PCalcExp
 ========
 
 PCalcExp is a stack-based parser for equasions, that might be useful outside this application as well.
+
+Calculat
+--------
+A simple calculator to test PCalcExp...
+
+Can be compiled with `fpc -MNESTEDCOMMENTS- calculat.pas` under ArchLinux
 
 Grafiek version 1.1 README
 --------------------------
