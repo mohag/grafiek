@@ -15,6 +15,10 @@ PCalcExp
 
 PCalcExp is a stack-based parser for equasions, that might be useful outside this application as well.
 
+I initially used calcexp (which seem to be [CalcExpress](http://www.aidaim.com/products/free_components/intr_spc.php) - a much newer version...), but it was too slow.
+
+PCalcExp converts the expression to postfix and then parses it using a stack. (A direct FPU implementation might be an intersting project...)
+
 Calculat
 --------
 A simple calculator to test PCalcExp...
