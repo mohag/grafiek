@@ -18,16 +18,16 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+}
 {
 Notes on compiling this program:
 --------------------------------
     General:
     --------
-        Free Pascal should generate the most effcient code
+        Free Pascal or Delphi 9 should generate the most effcient code
     Free Pascal:
     ------------
-        Set target to DOS(GO32v2)
+        none
     Turbo/Borland Pascal:
     ---------------------
         Free Pascal compilation is recommended since it generates faster 32bit
@@ -35,7 +35,8 @@ Notes on compiling this program:
         BP only: Set target to REAL MODE or "Protected mode"
     Delphi:
     -------
-        none
+        Only Delphi 9 supports inlining. The source code should be modified in
+        order for this to work
 }
 {$B-}
 {$N+}
@@ -283,7 +284,7 @@ Begin
 End;
 {-------------------------------------------------------------------------}
 Function Stringstack.PopF : shortstring;
-var tmp : string;
+var tmp : shortstring;
 Begin
    pop(tmp);
    popf := tmp;

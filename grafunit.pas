@@ -35,9 +35,12 @@ Interface
 uses pcalcexp;
 {--CONSTANTS------------------------------------------------------------------}
 const
-    version         = '1.1';
-    configfilename  = 'dosplot.cfg';
-    logfilename     = 'dosplot.log';
+    version         =   '1.1';
+    year            =   '2004';
+    configfilename  =   'dosplot.cfg';
+    logfilename     =   'dosplot.log';
+    htab            =   #09;
+    kolomme         =   3;
 {--TYPES----------------------------------------------------------------------}
 Type
 {$IFNDEF FPC}
@@ -45,11 +48,7 @@ Type
      Smallint    = Integer;
 {$Endif}
 
-{$IFNDEF FPC}
      SettingT = Packed Record
-{$ELSE}
-     SettingT = Record
-{$Endif}
                    x,y      : longint;
                    kleur    : word;
                    skaal    : word;
@@ -64,6 +63,9 @@ Type
                    min          : real;
                    max          : real;
                 End;
+     CommandT = (setcolorl,cls,setdetail,setlinemode,setscale,setx,sety,
+                 plotx,ploty,plotxd,plotyd,comment,putdotl,savel,loadl,
+                 pushposl,delayl, waitl,unknownl,headerl);
 
 {--VARS-----------------------------------------------------------------------}
 Var maxx, maxy : word;
@@ -80,18 +82,34 @@ Procedure DefSetts(var settings : settingT);
 Procedure SaveSettings(fname : string;var sets : settingT);
 Procedure LoadSettings(fname : string;var sets : settingT);
 Procedure LogEvent(const evt : STRING);
+Procedure PutDot(const realx,realy  : extended;
+                 const size         : byte;
+                 const filled       : boolean;
+                 const settings     : SettingT);
 Function Str2Graph(inp : shortstring;var output : GraphT): longint;
 Function Num2Str(inp : extended) :string;
 Function Int2Str(inp : integer) :string;
 Function SafeRound(inp : extended) : longint;
 Function BuildString : shortstring;
+Function FileExists(fname : string) : boolean;
+Function IDScriptLine(line : string) : CommandT;
+Function ScriptLineDescript(const Linetype : CommandT) : String;
+Function OpenScript(var txt :text;filename : string) : Byte;
+Function MinParams(const Linetype : CommandT) : Byte;
+Function ParseString(const str : string; var error : boolean;
+                     x,y,z : extended) : extended;
 {-----------------------------------------------------------------------------}
 Implementation
 {--USES------------------------------------------------------------------------}
-uses {$ifdef Win32}crt, windows{$Else}Crt{$endif},graph,dos
-{$IfNDEF FPC}
-,bgifont3,VGAdriv
-{$ENDIF};
+uses
+    crt,
+    {$ifdef Win32}
+        windows,
+    {$endif}
+    graph,dos
+    {$IfNDEF FPC}
+        ,bgifont3,VGAdriv
+    {$ENDIF};
 {--TYPES----------------------------------------------------------------------}
 TYPE
      SettingFT = file of settingT;
@@ -107,16 +125,40 @@ end;
 {-----------------------------------------------------------------------------}
 Procedure FuncInfo;
 {Shows what can be used at "custom vergelyking"}
+const
+      Funccount = 36;
+      Functions : Array[1..funccount] of String[10]
+                = ('ASIN','ARCSIN','ACOS','ARCCOS','ATAN','ARCTAN','SIN',
+                   'COS','TAN','COT','SEC','COSEC','NEG','LN','LOG',
+                   'EXP','TRUNC','ABS','ROUND','SQR','DEG','SQRT','SINH',
+                   'COSH','TANH','ARCSINH','ARCTANH','ARCCOSH','ASINH',
+                   'ATANH','ACOSH','SECH','COSECH','CSCH','COTH','CSC');{}
+var
+    i   :   integer;
 BEGIN
+{$IFNDEF LINUX}
   Window(1,10,41,36);
+{$ELSE}
+  Window(1,5,41,25);
+{$ENDIF}
   TextBackground(Green);
   ClrScr;
-  Window(2,11,41,36);
+{$IFNDEF LINUX}
+  Window(2,5,41,25);
+{$ELSE}
+  Window(2,5,41,25);
+{$ENDIF}
   TextColor(White);
   Writeln('Supported Functions:');
   Writeln('--------------------');
   Writeln;
-  Writeln('|------------|------------------------|');
+  For i := 1 to FuncCount do
+    Begin
+        Write(Functions[i],htab);
+        If (i mod kolomme = 0) then
+            Writeln;
+    End;
+(*  Writeln('|------------|------------------------|');
   Writeln('|Function:   |Description:            |');
   Writeln('|------------|------------------------|');
   Writeln('|ASIN/ARCSIN | Arcsin of the number   |');
@@ -138,6 +180,7 @@ BEGIN
   Writeln('|TRUNC       | Integer part of number |');
   Writeln('|ROUND       | rounds num. to integer |');
   Writeln('---------------------------------------');
+*)
   Window(59,10,80,20);
   TextBackground(Blue);
   TextColor(Yellow);
@@ -152,9 +195,13 @@ BEGIN
   Writeln('/ Division');
   Writeln('^ Exponetiation');
   Write  ('% Modulus');
+{$IFNDEF LINUX}
   Window(1,1,80,9);
-  TextBackground(Black);
+{$ELSE}
+  Window(1,1,80,4);
+{$ENDIF}
   TextColor(7);
+  TextBackground(Black);
   ClrScr;
 END;
 {-----------------------------------------------------------------------------}
@@ -204,8 +251,10 @@ End;
 {- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - }
 var oldpal : PaletteType;
     oldcol : word;
+{$IFNDEF FPC}
     run    : boolean;
     cancel : boolean;
+{$ENDIF}
 Begin
    SetGraphMode(gm);
    GetPalette(oldpal);
@@ -253,7 +302,7 @@ Begin
 
    RGBSetPalette(2,180,180,180);
    Settextjustify(0,2);
-   OuttextXy(0,40 ,'Copyright (C) 2004  Gert van den Berg');
+   OuttextXy(0,40 ,'Copyright (C) '+year+'  Gert van den Berg');
    OuttextXy(0,60 ,'This program is free software; you can redistribute it and/or modify');
    OuttextXy(0,70 ,'it under the terms of the GNU General Public License as published by');
    OuttextXy(0,80 ,'the Free Software Foundation; either version 2 of the License, or');
@@ -269,6 +318,10 @@ Begin
    OuttextXy(0,180,'Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA');
 
    OuttextXy(0,200,'This license can be found in license.txt');
+
+   OuttextXy(0,220,'Additional credits:');
+
+   OuttextXy(0,240,'OG Francis: Helped debugging code to save / Load screen');
    SetColor(3);
    RGBSetPalette(3,255,255,255);
    SetColor(4);
@@ -359,7 +412,7 @@ Begin
            ch := readkey;
            Val(ch,sets.gm,c);
            sets.GD := InstallUserDriver('SVGA16', Nil);{}
-           vesa := true;;
+           vesa := true;
          end;
         9   :
          begin
@@ -493,7 +546,7 @@ Begin
    if sets.y = 0 then sets.y := maxy div 2;
    sets.bgipath := oldpath;
    SaveSettings(configfilename,sets);
-   gm := sets.gm;
+   gm := Sets.gm;
 End; (* *)
 {----------------------------------------------------------------------------}
 Procedure Asse(sets: settingT);
@@ -503,7 +556,12 @@ var oukleur : word;
 Begin
    OuKleur := GetColor;
    GettextSettings(outs);
+   SetBkColor(Black);
+   SetColor(Black);
+   SetBkColor(Black);
    ClearDevice;
+{   Rectangle(0,0,maxx,maxy);}
+   FloodFill(1,1,black);
    If sets.skaal > 1 then
     Begin
        SetColor(DarkGray);
@@ -549,10 +607,18 @@ End;
 {----------------------------------------------------------------------------}
 Procedure Kleurkodes;
 Begin
+{$IFNDEF LINUX}
    Window(60,10,80,27);
+{$ELSE}
+   Window(60,20,80,17);
+{$ENDIF}
    TextBackground(Blue);
    ClrScr;
+{$IFNDEF LINUX}
    Window(61,11,80,27);
+{$ELSE}
+   Window(61,21,80,17);
+{$ENDIF}
    ClrScr;
    TextColor(White);
    WriteLn('0  Black');
@@ -595,22 +661,29 @@ Begin
 End;
 {----------------------------------------------------------------------------}
 Procedure LogEvent(const evt : STRING);
-var txt : text;
+var
+    log              : text;
     h,min,s,hs,y,m,d : word;
 BEGIN
   GetDate(y,m,d,hs);
   GetTime(h,min,s,hs);
-  Assign(txt,logfilename);
-  {$I-}Append(txt);{$I+}
+  Assign(log,logfilename);
+  {$I-}Append(log);{$I+}
   IF IOResult <> 0 then
    Begin
-      REwrite(txt);
-      Writeln(txt,'DosPlot version '+version+' log file');
-      Writeln(txt,'------------------------------')
+      REwrite(log);
+      Writeln(log,'DosPlot version '+version+' log file');
+      Writeln(log,'------------------------------')
    End;
-  Write(txt,d:2,'/',m:2,'/',y:4,' ',h:2,':',min:2,':',s:2,'.',hs:2,'  ');
-  Writeln(txt,evt);
-  {$I-}Close(txt);{$I+}
+  Writeln(log,d:2,'/',m:2,'/',y:4,' ',h:2,':',min:2,':',s:2,'.',hs*10:3,
+          ' ',evt);
+  {$I-}Close(log);{$I+}
+  If IOResult <> 0 then
+     Begin
+          Sound(500);
+          Delay(500);
+          NoSound;
+     End;
 END;
 {----------------------------------------------------------------------------}
 Procedure LoadSettings(fname : string;var sets : settingT);
@@ -644,6 +717,31 @@ Begin
 {   if maxx < 10 then sets.x := 319;
    if maxy < 10 then sets.y := 239;}
    Close(lr);
+End;
+{----------------------------------------------------------------------------}
+Procedure PutDot(const realx,realy  : extended;
+                 const size         : byte;
+                 const filled       : boolean;
+                 const settings     : SettingT);
+var
+    x,y         :   longint;
+    oldcolor    :   word;
+    oldfill     :   word;
+Begin
+    x   :=  Settings.x + round(realx*settings.skaal);
+    y   :=  Settings.y + round(realy*settings.skaal);
+    oldColor := GetColor;
+    SetColor(settings.kleur);
+    SetFillStyle(solidFill,settings.kleur);
+    FillEllipse(x,y,size,size);
+    If not filled then
+    else
+        Begin
+            SetFillStyle(solidFill,Black);
+            FillEllipse(x,y,size-1,size-1);
+        End;
+    SetColor(oldcolor);
+    SetFillStyle(solidFill,oldcolor);
 End;
 {----------------------------------------------------------------------------}
 Function Str2Graph(inp : shortstring;var output : GraphT): longint;
@@ -817,7 +915,7 @@ End;
 {----------------------------------------------------------------------------}
 Function BuildString : shortstring;
 Begin
-    {$IFDEF FPC}
+{$IFDEF FPC}
     {$IFDEF WIN32}
      Buildstring := 'Free Pascal Win32 build';
     {$ENDIF}
@@ -827,8 +925,8 @@ Begin
     {$IFDEF LINUX}
      Buildstring := 'Free Pascal Linux build';
     {$ENDIF}
-   {$ENDIF}
-   {$IFDEF Ver70}
+{$ENDIF}
+{$IFDEF Ver70}
     {$IFDEF WINDOWS}
      Buildstring := 'Borland Pascal Windows build';
     {$ENDIF}
@@ -838,10 +936,225 @@ Begin
     {$IFDEF DPMI}
      Buildstring := 'Borland Pascal Protected mode build';
     {$ENDIF}
-   {$ENDIF}
-   {$IFDEF DELPHI}
+{$ENDIF}
+{$IFDEF DELPHI}
      Buildstring := 'Borland Delphi build';
-   {$ENDIF}
+{$ENDIF}
+End;
+{----------------------------------------------------------------------------}
+Function FileExists(fname : string) : boolean;
+Var
+    lr  :   File;
+    ti  :   longint;
+Begin
+    ti := filemode;
+    Filemode := 0;
+    {$I-}
+    Assign(lr,fname);
+    Reset(lr);{$I+}
+    {$I-}Close(lr);{$i+}
+    FileExists := (IOResult = 0);
+    filemode := ti;
+End;
+{----------------------------------------------------------------------------}
+Function IDScriptLine(line : string) : CommandT;
+var
+    ts          :   string;
+    posspace    :   integer;
+Begin
+    posspace := Pos(' ',line);
+    If Posspace = 0 then
+        ts  :=  UpperCase(line)
+    else
+        ts  :=  UpperCase(Copy(line,1,posspace -1));
+    If (ts = 'C') then
+        IDScriptLine := setcolorl
+    else If (ts = 'CLS') then
+        IDScriptLine := cls
+    else If (ts = 'D') then
+        IDScriptLine := setdetail
+    else If (ts = 'L') then
+        IDScriptLine := setlinemode
+    else If (ts = 'S') then
+        IDScriptLine := setscale
+    else If (ts = 'X') then
+        IDScriptLine := setx
+    else If (ts = 'Y') then
+        IDScriptLine := sety
+    else If (ts = 'PX') then
+        IDScriptLine := plotx
+    else If (ts = 'P') or (ts = 'PY') then
+        IDScriptLine := ploty
+    else If (ts = 'PXD') then
+        IDScriptLine := plotxd
+    else If (ts = 'PYD') or (ts = 'PD') then
+        IDScriptLine := plotyd
+    else If (ts[1] = '#') or (ts[1] = ';') then
+        IDScriptLine := comment
+    else If (ts = 'DOT') then
+        IDScriptLine := putdotl
+    else If (ts = 'SAVE') then
+        IDScriptLine := savel
+    else If (ts = 'LOAD') then
+        IDScriptLine := loadl
+    else If (ts = 'PUSH') then
+        IDScriptLine := pushposl
+    else If (ts = 'DELAY') then
+        IDScriptLine := delayl
+    else If (ts = 'WAIT') then
+        IDScriptLine := waitl
+    else If (ts = 'GRAPHSCRIPT') then
+        IDScriptLine := headerl
+    else
+        IDScriptLine := Unknownl;
+End;
+{----------------------------------------------------------------------------}
+Function MinParams(const Linetype : CommandT) : Byte;
+Begin
+    Case Linetype of
+        headerl      : MinParams := 0;
+        setcolorl    : MinParams := 1;
+        cls          : MinParams := 0;
+        setdetail    : MinParams := 1;
+        setlinemode  : MinParams := 1;
+        setscale     : MinParams := 1;
+        setx         : MinParams := 1;
+        sety         : MinParams := 1;
+        plotx        : MinParams := 1;
+        ploty        : MinParams := 1;
+        plotxd       : MinParams := 1;
+        plotyd       : MinParams := 1;
+        comment      : MinParams := 0;
+        putdotl      : MinParams := 2;
+        savel        : MinParams := 1;
+        loadl        : MinParams := 1;
+        pushposl     : MinParams := 0;
+        delayl       : MinParams := 1;
+        waitl        : MinParams := 0;
+    Else
+        MinParams := 0;
+    End;
+End;
+{----------------------------------------------------------------------------}
+Function ParseString(const str : string; var error : boolean;
+                     x,y,z : extended) : extended;
+var
+    postfix :   postft;
+Begin
+    error := false;
+    {$IFDEF EXCEPT}
+    try
+    {$ENDIF}
+        String2Postf(str, postfix);
+    {$IFDEF EXCEPT}
+    except
+        error := true;
+        Postfix.clear;
+        ParseString := 0;
+    end;
+    {$ENDIF}
+    IF CalcResult <> 0 then
+        Begin
+            error := true;
+            ParseString := 0;
+            Postfix.clear;
+        End;
+    {$IFDEF EXCEPT}
+    try
+    {$ENDIF}
+        ParseString := CalcPostfix(postfix,x,y,z);
+    {$IFDEF EXCEPT}
+    except
+        error := true;
+        ParseString := 0;
+        Postfix.clear;
+    end;
+    {$ENDIF}
+    IF CalcResult <> 0 then
+        Begin
+            error := true;
+            ParseString := 0;
+            Postfix.clear;
+        End;
+End;
+{----------------------------------------------------------------------------}
+Function ScriptLineDescript(const Linetype : CommandT) : String;
+Begin
+    Case Linetype of
+        headerl      :  ScriptLineDescript := 'Header of script';
+        setcolorl    :  ScriptLineDescript := 'Line sets color';
+        cls          :  ScriptLineDescript := 'Line clears screen';
+        setdetail    :  ScriptLineDescript := 'Line sets detail';
+        setlinemode  :  ScriptLineDescript := 'Line sets linemode';
+        setscale     :  ScriptLineDescript := 'Line sets scale';
+        setx         :  ScriptLineDescript := 'Line sets position of x axis';
+        sety         :  ScriptLineDescript := 'Line sets position of y axis';
+        plotx        :  ScriptLineDescript := 'Line plots x as function of y';
+        ploty        :  ScriptLineDescript := 'Line plots y as function of x';
+        plotxd       :  ScriptLineDescript := 'Line plots x as deriviative '+
+                                              'of function of y';
+        plotyd       :  ScriptLineDescript := 'Line plots y as deriviative '+
+                                              'of function of x';
+        comment      :  ScriptLineDescript := 'Line is comment';
+        putdotl      :  ScriptLineDescript := 'Line draws dot';
+        savel        :  ScriptLineDescript := 'Line saves screendump';
+        loadl        :  ScriptLineDescript := 'Line loads screendump';
+        pushposl     :  ScriptLineDescript := 'Line saves current position '+
+                                              'in script';
+        delayl       :  ScriptLineDescript := 'Line delays script';
+        waitl        :  ScriptLineDescript := 'Line waits for user to press'+
+                                              ' a key';
+    Else
+        ScriptLineDescript := 'Error: Unknown line type';
+    End;
+End;
+{----------------------------------------------------------------------------}
+Function OpenScript(var txt :text;filename : string) : Byte;
+Label cleanup;
+var
+    Error : byte;
+Begin
+{$IFDEF EXCEPT}
+    Try
+        Assign(txt, filename);
+    except
+        LogEvent('Fatal Error: Invalid Filename! Long filenames not allowed');
+        error := 99;
+    end;
+
+    if (error = 99) then
+        GOTO cleanup;
+
+    try
+        Reset(txt);
+    except
+        LogEvent('Fatal Error: Cannot open file "'+filename+'".');
+        error := 99;
+    end;
+
+    if (error = 99) then
+        GOTO cleanup;
+
+{$ELSE}
+    {$I-}Assign(txt,filename);{$I-}
+    IF IOResult = 0 then
+       {$I-}REset(txt){$I+}
+    Else
+        Begin
+            LogEvent('Fatal Error: Filename invalid.  Long filenames not allowed.');
+            error := 99;
+            GOTO cleanup;
+        End;
+
+    If (Ioresult <> 0) then
+        Begin
+            LogEvent('Fatal Error: Cannot open file "'+'".');
+            error := 99;
+            GOTO cleanup;
+        End;
+{$Endif}
+cleanup:
+    OpenScript := error;
 End;
 {----------------------------------------------------------------------------}
 end.

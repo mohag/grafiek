@@ -1,3 +1,4 @@
+Program DosPlot;
 {
     DosPlot - a dos program that plots graphs
     Copyright (C) 2004  Gert van den Berg
@@ -19,21 +20,20 @@
 To do list:
 -----------
 
-3.  Add seperate X and Y scale
+3.  Add separate X and Y scale
 5b. Translate source to English
-6.  Add support for equations with custom subject (e.g. x^2+y^2=100
-8.  Add screenshot support
+6.  Add support for equations with custom subject (e.g. x^3+y^3=6xy
+8.  Add screen shot support
 10. Add comments to source
 11. Port to windows
 )
-
-Please note that this program may compile to win32.  This is not supported!
 
 Notes on compiling this program:
 --------------------------------
     Free Pascal:
     ------------
-        Set target to DOS(GO32v2)
+        Set target to DOS(GO32v2), WIN32 might work as well.  Do not run WIN32
+        version from IDE.
     Turbo/Borland Pascal:
     ---------------------
         Free Pascal compilation is recommended since it generates faster 32bit
@@ -48,24 +48,19 @@ Notes on compiling this program:
     {$ELSE}
     {$ENDIF}
 *)
-{$B-}
-{$N+}
-{$E-}
-{$G+}
-{$R-}
+{$F+}{$B-}{$N+}{$E-}{$G+}{$R-}
 {$IFDEF FPC}
  {$INLINE ON}
- {$DEFINE EXCEPT}  // Free Pascal het exceptions wat gehandle moet word.
+ {$DEFINE EXCEPT}  // Free Pascal het exception support.
                    // Delphi ook maar dit behoort NIE te werk NIE
  {$MODE Delphi}
  {$M 131072, 9000000}
  {$GOTO ON}
 {$ENDIF}
 {$M 65520,0,655360}
-Program DosPlot;
 
-Uses Graph, grafunit, pcalcexp, scrsave,
-{$IFDEF WIN32}crt,windows{$ELSE}crt{$ENDIF};
+Uses Graph, grafunit, pcalcexp, scrsave,crt
+{$IFDEF WIN32},windows{$ENDIF};
 
 Type
 {    coordintT  = Record
@@ -80,29 +75,69 @@ Type
                      realy      : extended;
                      valid      : boolean;
                  End;{}
+    CalcFuncT  = Function (const p1 : extended;
+                           const p2 : postfT;
+                           var   p3 : boolean) : extended;
 const
     small   :   extended    =   1e-14;
     large   :   extended    =   1e10;
+
 {----------------------------------------------------------------------------}
-Function CalcRealY  (   const x,y,z  : extended;
-                        const pf : postft) : extended;
-{$IFDEF FPC}inline;{Ensures faster code}{$ENDIF}
+Function CalcRealY  (   const x     : extended;
+                        const pf    : postfT;
+                        var   error : boolean) : extended;
 Begin
+    error := false;
     {$IFDEF EXCEPT}
     try  // sorg dat nie exit op exception
         try
-            calcRealy := CalcPostfix(pf,x,y,z);
+            calcRealy := CalcPostfix(pf,x,0,0);
         except
-            calcrealy := 0;
+            calcrealy   := 0;
+            error       := true or (calcerror <> 0);
         end;
     except
-        ;
+        error := true;
     end;
     {$ELSE}
-    calcRealy      := CalcPostfix(pf,x,y,z);
-    if calcerror <> 0 then
-        calcrealy := 0;
+    calcRealy      := CalcPostfix(pf,x,0,0);
+    if (calcerror <> 0) then
+        Begin
+            calcrealy := 0;
+            error := true;
+        End;
     {$ENDIF}
+End;
+{----------------------------------------------------------------------------}
+Function slope  (const   position    :   extended;
+                 const   postf       :   postfT;
+                 var     error       :   boolean)   :   extended; far;
+{Returns and estimation of lim(x->position-)[postf]
+Error = true if error calculating limit}
+var
+    x       :   extended;
+    tmp     :   extended;
+    tmp2    :   extended;
+Begin
+    {$IFDEF EXCEPT}
+    try
+    {$ENDIF}
+    tmp     :=  calcrealy(position,postf,error);
+    error   :=  error or (CalcError <> 0);
+    If abs(tmp) > 1 then
+        tmp2    :=  small*tmp
+    else
+        tmp2    :=  small;
+    x       :=  position + tmp2;
+    slope   :=  (calcrealy(x,postf,error)-tmp)/tmp2;
+    {$IFDEF EXCEPT}
+    except
+        error   := true;
+    end;
+    {$ENDIF}
+    error   :=  error or (CalcError <> 0);
+    If Error then
+        slope := 0;
 End;
 {----------------------------------------------------------------------------}
 Function leftvalue (const   position    :   extended;
@@ -114,8 +149,7 @@ var
     x   :   extended;
 Begin
     x           := position - small;
-    leftvalue   := calcrealy(x,0,0,postf);
-    error       := (CalcResult <> 0);
+    leftvalue   := calcrealy(x,postf,error);
 End;
 {----------------------------------------------------------------------------}
 Function rightvalue(const   position    :   extended;
@@ -127,8 +161,7 @@ var
     x   :   extended;
 Begin
     x           := position + small;
-    rightvalue  := calcrealy(x,0,0,postf);
-    error       := (CalcResult <> 0);
+    rightvalue  := calcrealy(x,postf,error);
 End;
 {----------------------------------------------------------------------------}
 Function limitvalue(const   position    :   extended;
@@ -154,29 +187,16 @@ Begin
     error       :=  error or errorl or errorr;
 End;
 {----------------------------------------------------------------------------}
-Function slope  (const   position    :   extended;
-                 const   postf       :   postft;
-                 var     error       :   boolean)   :   extended;
-{Returns and estimation of lim(x->position-)[postf]
-Error = true if error calculating limit}
-var
-    x   :   extended;
-Begin
-    x       :=  position + small;
-    slope   :=  (calcrealy(x,0,0,postf)-calcrealy(position,0,0,postf))/small;
-    error   :=  (CalcResult <> 0);
-End;
-{----------------------------------------------------------------------------}
 Function discontinuous(const   min, max    :   extended;
                        const   postf       :   postft;
                        var     position    :   extended)   :   boolean;
-{Return false if a function does not contain jump dicontinuities between min
+{Return false if a function does not contain jump discontinuities between min
 and max.
 
-Position will contain position of dicontinuity.
+Position will contain position of discontinuity.
 
 In order for this to work properly the gap between min and max must be
-suffiently small
+sufficiently small
 
 Will return false if gradient is very large at cen or if postf(min/max/cen)
 is undefined}
@@ -383,9 +403,9 @@ Begin
     discontinuous   := disconrecur(min,max);
 End;
 {----------------------------------------------------------------------------}
-Procedure PlotGraph(Settings    : SettingT;
+Procedure YPlotGraph(Settings    : SettingT;
                     grafiek     : grapht;
-                    yval        : extended;
+                    CalcFunc    : CalcFuncT;
                     form        : string);
 
 var
@@ -407,27 +427,31 @@ var
     oud,nuut       : coordT;
     err            : integer;
     dump           : extended;
-
+    plotslope      : boolean;
+    dump2          : boolean;
 Begin
+    PlotSlope := (@CalcFunc = @Slope);
     OuKleur := GetColor;
     GettextSettings(outs);
     nuwedetail := settings.detail*settings.skaal;
     discontinu := false;
     Setcolor(settings.kleur);
     LogEvent('Attempting to plot '+form);
+    If PlotSlope then
+        LogEvent('Plotting derivative');
 
     With Settings do with grafiek do
      Begin
-       def.maxx := ((maxX - x) DIV skaal)+1;
+       def.maxX := ((maxX - x) DIV skaal)+1;
        def.minx := -(x div skaal)-1;
        def.maxy := (y div skaal)+1;
        def.miny := ((y - maxy) div skaal)-1;
        If grafiek.min > def.minx then def.minx := grafiek.min;
-       If grafiek.max < def.maxx then def.maxx := grafiek.max;
-       def.xunits := (def.maxx - def.minx);
+       If grafiek.max < def.maxX then def.maxX := grafiek.max;
+       def.xunits := (def.maxX - def.minx);
        def.rndxu  := Saferound(def.xunits);
        def.xusize := def.xunits/def.rndxu;
-       nuwedetail := saferound(nuwedetail * def.xusize); { ensure detail is
+       nuwedetail := Saferound(nuwedetail * def.xusize); { ensure detail is
                                                            correct}
        {Variables initialized}
 
@@ -436,10 +460,10 @@ Begin
           nuut.realx := def.minx;
           oud.x      := round(x+(nuut.realx*skaal));
           oud.realx  := def.minx;
-          nuut.Realy := CalcRealy(nuut.realx,yval,0,postfix);
+          nuut.Realy := CalcFunc(nuut.realx,postfix,discontinu);
           oud.y      := Saferound(y-nuut.realy*skaal);
-          err        := calcresult;
-          discontinu := (err <> 0);
+          err        := CalcResult;
+          discontinu := discontinu or (err <> 0);
           oud.valid  := discontinu;
         end; {Start position of graph calculated}
 
@@ -448,11 +472,11 @@ Begin
            For j:= 0 to (nuwedetail -1) do
             Begin
                nuut.Realx   := (def.minx + (i+j/nuwedetail)*def.xusize);
-               nuut.Realy   := CalcRealy(nuut.realx,yval,0,postfix);
-               Err := calcresult;
+               nuut.Realy   := CalcFunc(nuut.realx,postfix,dump2);
+               Err := CalcResult;
                nuut.x     := round(x+(nuut.realx*skaal));
 {               LogEvent('RealX: '+Num2Str(realx)+' Err: '+Int2Str(err));{VERY slow debugging line}
-               If (err = 0){ and ((y-realy*skaal) < y+200)} then
+               If (err = 0) then
                   nuut.y     := Saferound(y-nuut.realy*skaal);
 
                If linemode then {If connect the dots}
@@ -463,11 +487,26 @@ Begin
                    if (err <> 0) then
                        discontinu := true
                    else
+              (*     if plotslope then
+                    Begin
+                        {$IFDEF FPC}
+                        try
+                        {$ENDIF}
+                        If (abs(y-calcrealy(nuut.realx,postfix,discontinu)) >= 32767) then
+                            discontinu := true;
+                        if (abs(y-nuut.realy*skaal) >= 10000) then {Prevent overflows}
+                            discontinu := true
+                        {$IFDEF FPC}
+                        except
+                            discontinu := true
+                        End;
+                        {$ENDIF}
+                    End else (* *)
                    if (abs(y-nuut.realy*skaal) >= 32767) then {Prevent overflows}
                        discontinu := true
                    else
                        discontinu := discontinuous(oud.realx,nuut.realx,
-                                                   postfix,dump);{}
+                                                   postfix,dump) or dump2;{}
 
                    If not discontinu then
                     Begin
@@ -475,7 +514,6 @@ Begin
                          line(oud.x,oud.y,nuut.x,nuut.y);
                       nuut.valid := true;
                     End;
-                   oud := nuut;
                 end else
                 If err = 0 then
                  Begin
@@ -484,8 +522,7 @@ Begin
                  End;{If err =0 /if linemode}
                If (oud.x <> nuut.x) then
                 Begin
-                  PutPixel(oud.x,  maxy, black);
-                  PutPixel(nuut.x, maxy, lightred);
+                  PutPixel(nuut.x, maxy, blue);
                 End;
                Oud := nuut;
             End; {For j}
@@ -493,7 +530,7 @@ Begin
      End; {With Settings}
 
     SetColor(0);
-    Line(0,maxy,maxx,maxy); {Ensure progress indicator is erased}
+    Line(0,maxy,maxX,maxy); {Ensure progress indicator is erased}
     LogEvent('Plotted '+form);
     with outs do
         Begin
@@ -503,7 +540,116 @@ Begin
         End;
 End;
 {----------------------------------------------------------------------------}
-Procedure Scriptplot(Settings : SettingT;filename : string);
+Function GetScriptLine(Var lr       : text;
+                       var linenum  : word;
+                       var error    : byte) : string;
+var
+    Str :   String;
+Begin
+{$IFDEF EXCEPT}
+    try
+        Readln(lr,str);
+        Inc(linenum);
+        GetScriptLine := str;
+    except
+        LogEvent('Fatal Error reading line '+Int2Str(linenum)+
+                 ': Unexpected end of file.');
+        Error := 99;
+        GetScriptLine := '';
+    end;
+
+{$ELSE}
+    {$I-}Readln(lr,str);{$I+}
+    Inc(linenum);
+    GetScriptLine := str;
+    If IOResult <> 0 then
+        Begin
+            LogEvent('Fatal Error reading line '+Int2Str(linenum)+
+                     ': Unexpected end of file.');
+            Error := 99;
+            GetScriptLine := '';
+        End;
+{$ENDIF}
+End;
+{----------------------------------------------------------------------------}
+Function GetParamCount(const line : string) : byte;
+var
+    i       :  integer;
+    antw    :  byte;
+Begin
+    antw    :=  0;
+    For i :=1 to length(line) do
+         Begin
+            If (antw = 0) and (line[i] = ' ') then
+                Inc(antw);
+            If (line[i] = '|') then
+                Inc(antw);
+         End;
+    GetParamCount := antw;
+End;
+{----------------------------------------------------------------------------}
+Function GetParam(const line : string;no : byte) : String;
+var
+    i       :  integer;
+    ts      :  string;
+    current :  byte;
+Begin
+    current :=  0;
+    ts      := '';
+    For i :=1 to length(line) do
+        Begin
+            If (current = 0) and (line[i] = ' ') then
+                Inc(current);
+            If (line[i] = '|') then
+                Inc(current);
+            If (current = no) then
+                ts := ts + line[i];
+            If (current > no) then
+                exit;
+        End;
+    GetParam := ts;
+End;
+{----------------------------------------------------------------------------}
+Function CalcValu  (const str : string;
+                    const x,y : Extended;
+                    Var error : boolean) : Extended;
+var
+    postf   :   PostfT;
+Begin
+    error   :=  false;
+    {$IFDEF EXCEPT}
+    try
+    {$ENDIF}
+        String2Postf(str, postf);
+    {$IFDEF EXCEPT}
+    except
+        error := true;
+        CalcValu    := 0;
+    end;
+    {$ENDIF}
+    If CalcError <> 0 then
+        error   :=  true;
+
+    If not (error) then
+        Begin
+            {$IFDEF EXCEPT}
+            try
+            {$ENDIF}
+                CalcValu := CalcPostfix(postf,x,y,0);
+            {$IFDEF EXCEPT}
+            except
+                error       := true;
+                CalcValu    := 0;
+            End;
+            {$ENDIF}
+            If CalcError <> 0 then
+                error   :=  true;
+        End;
+    If Error then
+        CalcValu  := 0;
+End;
+{----------------------------------------------------------------------------}
+Function Scriptplot(Settings : SettingT;filename : string) : byte;
 {Error codes:
 0  : none
 1  : Non- fatal
@@ -511,8 +657,8 @@ Procedure Scriptplot(Settings : SettingT;filename : string);
 }
 Var
     oukleur        : word;
-    outs           : textsettingsType;
-    lr             : TEXT;
+    outs           : TextSettingsType;
+    srp            : TEXT;
     ioe            : integer;
     str,ts         : String;
     error          : byte;
@@ -521,166 +667,157 @@ Var
     grafiek        : grapht;
     li             : longint;
     ce             : integer absolute li;
-
+    LineType       : Commandt;
+    boolerr        : boolean;
+    parm           : string;
 label
-    readline, {Position of readln(), used if line is empty}
+    readline, {Position of Readln(), used if line is empty}
     cleanup; {Program jump daarheen op fatal errors}
 
 Begin
-   error := 0;
-   LogEvent('Plotting from '+filename+' started');
-   GettextSettings(outs);
-   ioe := IOResult;
-   If Ioe <> 0 then
-        ioe := 0;
-   OuKleur := GetColor;
-   {$IFDEF EXCEPT}
-   Try
-      Assign(lr, filename);
-   except
-      LogEvent('Fatal Error: Invalid Filename! Long filenames not allowed');
-      error := 99;
-   end;
+    error := 0;
+    GettextSettings(outs);
+    ioe := IOResult;
+    OuKleur := GetColor;
+    ioe := 0;
 
-   if (error = 99) then
-       GOTO cleanup;
+    LogEvent('Plotting from '+filename+' started');
 
-   try
-      Reset(lr);
-   except
-      LogEvent('Fatal Error: Cannot open file "'+filename+'".');
-      error := 99;
-   end;
-
-   if (error = 99) then
-       GOTO cleanup;
-
-   {$ELSE}
-   {$I-}Assign(lr,filename);{$I-}
-   IF IOResult = 0 then
-      {$I-}REset(lr){$I+}
-    Else
-     Begin
-        LogEvent('Fatal Error: Filename invalid.  Long filenames not allowed.');
-        error := 99;
-        GOTO cleanup;
-     End;
-
-   If (Ioresult <> 0) then
-    Begin
-       LogEvent('Fatal Error: Cannot open file "'+'".');
-       error := 99;
-       GOTO cleanup;
+    Case openscript(srp,filename) of
+        0   :   LogEvent('File Opened successfully');
+    else
+        Goto Cleanup;
     End;
-   {$Endif}
 
-   LogEvent('File Opened successfully');
-   If not(Eof(lr)) then
-      Begin
-      {$IFDEF EXCEPT}
-          try
-              Readln(lr,str);
-          except
-              LogEvent('Fatal Error: File shorter than one line.');
-              Error := 99;
-          end;
+    line := 0;
 
-          if (error = 99) then
-              GOTO cleanup;
+    If not(Eof(srp)) then
+        Begin
+            str := GetScriptLine(srp,line,error);
 
-      {$Else}
-          {$I-}Readln(lr,str);{$I+}
-          If (IOResult <> 0) then
-             Begin
-                LogEvent('Fatal Error: File shorter than one line.');
-                Error := 99;
-                GOTO Cleanup;
-             End;
-      {$ENDIF}
-      End else {If not Eof}
-      Begin
-         LogEvent('Fatal Error: File Empty.');
-         Error := 99;
-         GOTO Cleanup;
-      End;{else of in not eof}
+            if (error = 99) then
+                GOTO cleanup;
+        End
+    else {If not Eof}
+        Begin
+            LogEvent('Fatal Error: File Empty.');
+            Error := 99;
+            GOTO Cleanup;
+        End;{else of in not Eof}
 
-   If (UpperCase(str) <> 'GRAPHSCRIPT') then
-       Begin
-           LogEvent('Error: Invalid file format.');
-           Error := 99;
-           GOTO Cleanup;
-       End; {if not "graphscript"}
+    LogEvent('Processing line no. '+int2str(line)+' "'+str+'"');
+    LineType := IDScriptLine(str);
+    If (LineType <> headerl) then
+        Begin
+            LogEvent('Error: Invalid file format.');
+            Error := 99;
+            GOTO Cleanup;
+        End;
 
-   line := 1;
 Readline:
-   While not(Eof(lr)) do
-     Begin
-         {$IFDEF EXCEPT}
-         try
-             Readln(lr,str);
-             Inc(line);
-         except
-             LogEvent('Fatal Error: Unexpected end of file.');
-             Error := 99;
-         end;
+    While not(Eof(srp)) do
+        Begin
+            LogEvent('Processing line no. '+int2str(line)+' "'+str+'"');
+            str := UpperCase(GetScriptLine(srp,line,error));
 
-         if (error = 99) then
-             GOTO cleanup;
+            if (error = 99) then
+                GOTO cleanup;
 
-         {$ELSE}
-         {$I-}Readln(lr,str);{$I+}
-         Inc(line);
-         If IOResult <> 0 then
-            Begin
-               LogEvent('Error: Unexpected end of file.');
-               Error := 99;
-               GOTO Cleanup;
+            If (str = '') then
+                goto readline;
+
+            LineType := IDScriptLine(str);
+            LogEvent(ScriptLineDescript(LineType));
+
+            If LineType = UnknownL then
+                error := 1;
+
+            If (MinParams(LineType) < GetParamCount(str)) then
+                Begin
+                    LogEvent('Too little parameters for line');
+                    error := 1;
+                End;
+{Up 2 date to here}
+
+            Case LineType of
+                comment     :   ;{Do nothing}
+                setcolorl   :
+                    Begin
+                        parm := GetParam(str,1);{TODO}
+                        ioe  := SafeRound(
+                                    ParseString(parm,boolerr,MaxX,MaxY,0)
+                                );
+                        If not(boolerr) then
+                            Begin
+                                Settings.kleur := ioe;
+                                LogEvent('Color set.');
+                            End
+                        else
+                            Begin
+                                LogEvent('Error parsing color');
+{                                error{}
+                            End;
+                    End;
+                cls         :
+                    Begin
+                        ClearViewPort;
+                        Asse(Settings);
+                        LogEvent('Screen cleared');
+                    End;
+                setdetail   :
+                    Begin
+                    End;
+                setlinemode :
+                    Begin
+                    End;
+                setscale    :
+                    Begin
+                    End;
+                setx        :
+                    Begin
+                    End;
+                sety        :
+                    Begin
+                    End;
+                plotx       :
+                    Begin
+                    End;
+                ploty       :
+                    Begin
+                    End;
+                plotxd      :
+                    Begin
+                    End;
+                plotyd      :
+                    Begin
+                    End;
+                putdotl     :
+                    Begin
+                    End;
+                savel       :
+                    Begin
+                    End;
+                loadl       :
+                    Begin
+                    End;
+                pushposl    :
+                    Begin
+                    End;
+                delayl      :
+                    Begin
+                    End;
+                waitl       :
+                    Begin
+                    End;
+                headerl     :
+                    Begin
+                        LogEvent('Error: Header not expected here');
+                        error   := 1;
+                    End;
+            else
+                LogEvent('Invalid Line');
             End;
-         {$ENDIF}
-         If str = '' then
-            goto readline;
-         Str := Uppercase(str);
-         LogEvent('Processing line no. '+int2str(line)+' "'+str+'"');
-         If length(str) >= 1 then
-             Case str[1] of
-                 ';' : LogEvent('Line is commment');
-                 'C' : Begin
-                           if Str[2] = ' ' then
-                               LogEvent('Line sets color')
-                           else
-                               if ((str[1]+str[2]+str[3])= 'CLS') then
-                                   LogEvent('Line clears screen')
-                               else
-                               Begin
-                                   LOgEvent('Error identifying line');
-                                   error := 1;
-                               end;
-                       End;
-                 'D' : LogEvent('Line sets detail');
-                 'L' : LogEvent('Line sets linemode');
-                 'S' : LogEvent('Line sets scale');
-                 'X' : LogEvent('Line sets X-axis');
-                 'Y' : LogEvent('Line sets Y-axis');
-                 'P' : LogEvent('Line plots a graph');
-             else
-                 error := 1;
-                 LogEvent('Error identifying line.');
-             end; {Case str[1], if length >= 1}
-
-         IF (str[1] in ['C','D','L','S','X','Y','P']) then
-             if (length(str) >= 3) and (str[2]=' ') then
-                  Begin
-                      ts := '';
-                      For i := 3 to length(str) do
-                           ts := ts + str[i];
-                  End else{if length}
-                  if str <> 'CLS' then
-                      Begin
-                          LogEvent('Line too short for type or invalid.');
-                          error := 1;
-                      end;{if cls, if str[1]}
-
-         Case str[1] of
+            Case str[1] of
               ';' : ;
               'C' : Begin
                         if str[2] = ' ' then
@@ -698,7 +835,7 @@ Readline:
                                         '8'  : settings.kleur := 8;
                                         '9'  : settings.kleur := 9;
                                     else
-                                        Logevent('Line '+Int2str(line)+' contains an invalid color, '+ts+'.');
+                                        LogEvent('Line '+Int2str(line)+' contains an invalid color, '+ts+'.');
                                     end {case}
                                 else {if length}
                                 if (length(ts) = 2) and (ts[1]='1') then
@@ -709,7 +846,7 @@ Readline:
                                        '4'  : settings.kleur := 14;
                                        '5'  : settings.kleur := 15;
                                     else {case}
-                                        Logevent('Line '+Int2str(line)+' contains an invalid color, '+ts+'.');
+                                        LogEvent('Line '+Int2str(line)+' contains an invalid color, '+ts+'.');
                                         error := 1;
                                     end;{if length}
                             end else {if str[2]}
@@ -726,7 +863,7 @@ Readline:
                             settings.detail := i
                         else
                         Begin
-                            Logevent('Detail value invalid');
+                            LogEvent('Detail value invalid');
                             Error := 1;
                         End;
                     end; {'D'}
@@ -738,7 +875,7 @@ Readline:
                                'T' : settings.linemode := not(settings.linemode)
                            else
                                error := 1;
-                               Logevent('Linemode must be set to "1","0" or "T".');
+                               LogEvent('Linemode must be set to "1","0" or "T".');
                            end;{case & if}
                     end; {'L'}
               'S' : Begin
@@ -747,7 +884,7 @@ Readline:
                             settings.skaal := i
                         else
                         Begin
-                            Logevent('Scale value invalid');
+                            LogEvent('Scale value invalid');
                             Error := 1;
                         End; {If err = 0}
                     end; {'S'}
@@ -759,11 +896,11 @@ Readline:
                                     settings.x := i
                                 else
                                 Begin
-                                    Logevent('Y-axis position invalid');
+                                    LogEvent('Y-axis position invalid');
                                     Error := 1;
                                 End;
                             end else
-                                settings.x := maxx div 2;
+                                settings.x := maxX div 2;
                     end; {'Y'}
               'X' : Begin
                         If (ts <> 'C') then
@@ -773,7 +910,7 @@ Readline:
                                     settings.y := i
                                 else
                                 Begin
-                                    Logevent('X-axis position invalid');
+                                    LogEvent('X-axis position invalid');
                                     Error := 1;
                                 End;
                             end else
@@ -787,7 +924,11 @@ Readline:
                                 PrecalcPostfix(grafiek.postfix);
                                 If pcalcexp.calcerror = 0 then
                                     Begin
-                                        PlotGraph(Settings, grafiek,0,ts);
+                                        {$IFDEF FPC}
+                                        YPlotGraph(Settings, grafiek,@CalcRealy,ts);
+                                        {$ELSE}
+                                        YPlotGraph(Settings, grafiek,CalcRealy,ts);
+                                        {$ENDIF}
                                         LogEvent('Graph "'+ts+'" plotted');
                                     End else
                                     Begin
@@ -802,60 +943,68 @@ Readline:
                                 Error := 1;
                             End;
                     end; {'P'}
-         else
-             LogEvent('Error identifying line.');
-             if length(str) > 0 then
-                error := 1;
-         end; {case str[1] of}
+            else
+                LogEvent('Error identifying line.');
+                if length(str) > 0 then
+                    error := 1;
+            end; {case str[1] of}
 
-         LogEvent('Finished with line '+Int2Str(line));
-     End; {While not(eof)}
+            LogEvent('Finished with line '+Int2Str(line));
+        End; {While not(Eof)}
 
 cleanup:
-   LogEvent('Plotting completed.');
-   case error of
-       0   : Logevent('No errors encountered');
-       1   : Logevent('Non-fatal errors encountered');
-       99  : Logevent('Fatal error encountered');
-   End;
-
-   LogEvent('--------------------------------------------------------');
-   {$IFDEF EXCEPT}
-   try
-     Close(lr);
-   except
-     LogEvent('Error Closing file "'+filename+'" after plotting.');
-   end;
-   {$ELSE}
-   {$I-}Close(lr);{$I+}
-   error := IOREsult;
-   {$ENDIF}
-   with outs do
-    Begin
-       SetColor(oukleur);
-       SettextStyle(font,direction,Charsize);
-       SettextJustify(horiz,vert);
+    LogEvent('Plotting completed.');
+    case error of
+        0   : LogEvent('No errors encountered');
+        1   : LogEvent('Non-fatal errors encountered');
+        99  : LogEvent('Fatal error encountered');
     End;
-    {$IFNDEF WIN32}
+    ScriptPlot := Error;
+    LogEvent('--------------------------------------------------------');
+{$IFDEF EXCEPT}
+    try
+        Close(srp);
+    except
+        LogEvent('Error Closing file "'+filename+'" after plotting.');
+    end;
+{$ELSE}
+    {$I-}Close(srp);{$I+}
+    error := IOResult;
+{$ENDIF}
+    with outs do
+        Begin
+            SetColor(oukleur);
+            SettextStyle(font,direction,Charsize);
+            SettextJustify(horiz,vert);
+        End;
+{$IFNDEF WIN32}    {TODO}
     If settings.view then readkey;
-    {$ENDIF}
+{$ENDIF}
 End;
 {----------------------------------------------------------------------------}
 Procedure Menu;
 {- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -}
 Procedure SettingsWindow(Settings : SettingT);
 Begin
+{$IFNDEF LINUX}
     Window(63,10,79,30);
+{$ELSE}
+    Window(63,4,79,24);
+{$ENDIF}
     TextBackground(Green);
     ClrScr;
+{$IFNDEF LINUX}
     Window(64,11,79,29);
+{$ELSE}
+    Window(64,5,79,24);
+{$ENDIF}
     TextColor(White);
     WriteLn('Settings:');
-    Writeln;
-    Writeln('Axes:');
-    Writeln(' x=',Settings.Y);
-    Writeln(' y=',Settings.X);
-    Writeln(' Scale=',Settings.skaal);
+    WriteLn;
+    WriteLn('Axes:');
+    WriteLn(' x=',Settings.Y);
+    WriteLn(' y=',Settings.X);
+    WriteLn(' Scale=',Settings.skaal);
     Writeln;
     Writeln('Graph:');
     Writeln(' Colour=',Settings.Kleur);
@@ -866,30 +1015,30 @@ Begin
     Writeln('Graphics:');
     Writeln(' Driver=',Settings.gd);
     Writeln(' Mode=',Settings.gm);
-    Write  ('  ',maxx+1,'X',maxy+1);
+    Write  ('  ',maxX+1,'X',maxy+1);
 End;
 {- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -}
 var
-    ch       : char;
-    Settings : SettingT;
-{    i        : shortint;}
-    form     : shortstring;
-    grafiek  : grapht;
-    li       : longint;
-    errdet   : record
-                   ce   : smallint;
-                   s2g  : smallint;
-               end
-                   absolute li;
+    ch          : char;
+    Settings    : SettingT;
+{    i           : shortint;}
+    form        : shortstring;
+    grafiek     : grapht;
+    li          : longint;
+    errdet      : record
+                    ce   : smallint;
+                    s2g  : smallint;
+                  end absolute li;
+    derivative : boolean;
 
 Begin
     LoadSettings(configfilename,settings);
     LogEvent('DosPlot '+version+' started');
     LogEvent(BuildString);
-    Logevent('Settings:');
+    LogEvent('Settings:');
     LogEvent('Driver: '+Int2str(settings.gd)+' '+Getdrivername);
     LogEvent('Mode: '+Int2str(settings.gm)+' ' + Getmodename(settings.gm));
-    LogEvent('   '+Int2str(maxx)+'x'+Int2str(maxy));
+    LogEvent('   '+Int2str(maxX)+'x'+Int2str(maxy));
     LogEvent('   Colours: '+Int2str(getmaxcolor));
     LogEvent('Asse: X='+Int2str(settings.y)+' Y='+Int2Str(settings.X));
     LogEvent('Scale: '+Int2Str(Settings.skaal));
@@ -905,37 +1054,60 @@ Begin
         TextMode(co80+font8x8);
         TextBackground(Blue);
         ClrScr;
-        Window(20,16,80-20,50-18);
+        TextColor(LightGray);
+        GotoXY(48,49);
+        Write('Copyright '+year+' Gert van den Berg');
+        GotoXY(49,50);
+        Write('See About / Credits for details');
+{$IFNDEF LINUX}
+        Window(20,14,60,50-18);
+{$ELSE}
+        Window(20,2,60,24);
+{$ENDIF}
         TextBackground(Red);
         ClrScr;
         SettingsWindow(Settings);
         TextBackground(Red);
-        Window(23,18,80-23,51-20);
+{$IFNDEF LINUX}
+        Window(23,16,80-23,51-18);
+{$ELSE}
+        Window(23,3,80-23,24);
+{$ENDIF}
         TextColor(Yellow);
-        Writeln('DosPlot Version 1.1'{+version});
+        Writeln('DosPlot Version '+version);
         Writeln('--------------------');
         Writeln;
+    {$IFNDEF WIN32}
         Writeln('0.  Show screen with graphs');
+    {$ENDIF}
         Writeln('1.  Plot Graph');
-        Writeln('2.  Plot Graph(s) from script');
-        Writeln('3.  Settings');
+        Writeln('2.  Plot Graph of derivative');
+        Writeln('3.  Plot Graph(s) from script');
+        Writeln('4.  Save screen dump to file');
+        Writeln('5.  Load screen dump from file');
+        Writeln('6.  Settings');
         Writeln('8.  Plot Axes & clear screen');
         {$IFNDEF FPC}
-            writeln('9.  Credits');
+            WriteLn('9.  Credits');
         {$ELSE}
-            writeln('9.  About');
+            WriteLn('9.  About');
         {$ENDIF}
         Writeln;
         Writeln('Esc Exit');
         Repeat
             ch := Upcase(ReadKey);
-        Until ch in ['0'..'3',#27,'8'..'9'];
+        Until ch in ['0'..'6',#27,'8'..'9'];
+        derivative := (ch = '2');
+        If derivative then
+            ch := '1';
         Case (ch) of
+    {$IFNDEF WIN32}
             '0' :
                 Begin
                     GraphMode('screen');
                     Readkey;
                 End;
+    {$ENDIF}
             '8' :
                 Begin
                     GraphMode('screen');
@@ -943,12 +1115,19 @@ Begin
                 End;
             '1' :
            Begin
+{$IFNDEF LINUX}
               Window(1,1,80,50);
+{$ELSE}
+              Window(1,1,80,25);
+{$ENDIF}
               TextColor(7);
               TextBackground(0);
               ClrScr;
               FuncInfo;
               WriteLn('Enter function: (e.g "y=x*sin(1/x)")');
+              If Derivative then
+                Writeln('This will plot an estimation of the function''s'+
+                        ' derivative');
               Write  (' y=');
               Readln(form);
               li := str2graph(form,grafiek);
@@ -958,15 +1137,15 @@ Begin
                       Begin
                           Writeln;
                           Writeln('Warning: Invalid domain');
-                          Writeln('Error no. '+Int2str(errdet.s2g)+' '+pcalcerrormsg(errdet.s2g));
-                          writeln;
+                          Writeln('Error no. '+Int2str(errdet.s2g)+' '+pcalcErrorMsg(errdet.s2g));
+                          WriteLn;
                           Writeln('Press any key to continue...');
                           readkey;
                       end;
                   {$IFDEF EXCEPT}
                   try
                       pcalcexp.calcerror := 0;
-                      LogEvent('Percalculating '+form);
+                      LogEvent('Precalculating '+form);
                       PrecalcPostfix(grafiek.postfix);{}
                   except
                       Writeln;
@@ -980,26 +1159,30 @@ Begin
                       Readkey;
                   End;
 
-                  If pcalcexp.calcresult = 0 then
+                  If pcalcexp.CalcResult = 0 then
                       Begin
-                          LogEvent('Percalculation of '+form+' suceeded.');
+                          LogEvent('Precalculation of '+form+' succeeded.');
                           GraphMode('screen');
-                          PlotGraph(Settings, grafiek,0,form);
-                          {$IFNDEF WIN32}
+                          If not derivative then
+                            YPlotGraph(Settings, grafiek,@calcrealy,form)
+                          else
+                            YPlotGraph(Settings, grafiek,@slope,form);
+    {$IFNDEF WIN32}
                           If settings.view then readkey;
-                          {$ENDIF}
+    {$ENDIF}
                       End;
                   {$ELSE}
-                  LogEvent('Percalculating '+form);
+                  LogEvent('Precalculating '+form);
                   PrecalcPostfix(grafiek.postfix);{}
                   If pcalcexp.calcerror = 0 then
                       Begin
-                          LogEvent('Percalculation of '+form+' suceeded.');
+                          LogEvent('Precalculation of '+form+' succeeded.');
                           GraphMode('screen');
-                          PlotGraph(Settings, grafiek,0,form);
-                          {$IFNDEF WIN32}
+                          If not derivative then
+                            PlotGraph(Settings, grafiek,calcrealy,form)
+                          else
+                            PlotGraph(Settings, grafiek,slope,form);
                           If settings.view then readkey;
-                          {$ENDIF}
                       End
                   else
                       Begin
@@ -1026,31 +1209,86 @@ Begin
                   Readkey;
                End;
            End;
-            '2' :
+            '3' :
                 Begin
+{$IFNDEF LINUX}
                     Window(1,1,80,50);
+{$ELSE}
+                    Window(1,1,80,25);
+{$ENDIF}
                     TextColor(7);
                     TextBackground(0);
                     ClrScr;
                     WriteLn('Please enter script''s filename:');
                     Write  ('>');
                     Readln(form);
-                    Graphmode('Screen');
+                    GraphMode('Screen');
                     ScriptPlot(settings,form);
                 End;
-            '3' :
+            '4' :
+                Begin
+{$IFNDEF LINUX}
+                    Window(1,1,80,50);
+{$ELSE}
+                    Window(1,1,80,25);
+{$ENDIF}
+                    TextColor(7);
+                    TextBackground(0);
+                    ClrScr;
+                    WriteLn('Please enter screen dump filename: (View and ',
+                            'convert to bitmap with screenview');
+                    Writeln('program (included)) (*.dmp)');
+                    Write  ('>');
+                    Readln(form);
+                    If (pos('.',form) = 0) then
+                        form := form + '.dmp';
+                    GraphMode('screen');
+                    SaveScreen(form,Settings);
+                    TxtMode('screen');
+                End;
+            '5' :
+                Begin
+{$IFNDEF LINUX}
+                    Window(1,1,80,50);
+{$ELSE}
+                    Window(1,1,80,25);
+{$ENDIF}
+                    TextColor(7);
+                    TextBackground(0);
+                    ClrScr;
+                    WriteLn('Please enter screen dump filename: (*.dmp)');
+                    Write  ('>');
+                    Readln(form);
+                    If ((pos('.',form) = 0) and not(FileExists(form))) then
+                        form := form + '.dmp';
+                    GraphMode('screen');
+                    LoadScreen(form);
+                    TxtMode('screen');
+                End;
+            '6' :
            Begin
               Repeat
                  ch := #0;
-                 TextBackground(Black);
                  TextMode(co80+font8x8);
-                 Window(0,0,80,50);
+{$IFNDEF LINUX}
+                 Window(1,1,80,50);
+{$ELSE}
+                 Window(1,1,80,25);
+{$ENDIF}
                  TextBackground(Blue);
                  ClrScr;
+{$IFNDEF LINUX}
                  Window(10,10,80-20,50-10);
+{$ELSE}
+                 Window(10,2,60,23);
+{$ENDIF}
                  TextBackground(Red);
                  ClrScr;
+{$IFNDEF LINUX}
                  Window(13,12,80-20,50-12);
+{$ELSE}
+                 Window(13,3,60,23);
+{$ENDIF}
                  TextColor(Yellow);
                  Writeln('Settings:');
                  Writeln('---------');
@@ -1068,35 +1306,39 @@ Begin
                  Writeln;
                  Writeln('Esc Return to main menu');
                  Writeln;
-                 Textcolor(lightRed+blink); Writeln('Warning:');
-                 Textcolor(15); Writeln('Options 0-5 clear the graphing screen');
+                 TextColor(LightRed+blink); Writeln('Warning:');
+                 TextColor(15); Writeln('Options 0-5 clear the graphing screen');
                  SettingsWindow(Settings);
+{$IFNDEF LINUX}
                  Window(1,1,80,50);
+{$ELSE}
+                 Window(1,1,80,25);
+{$ENDIF}
                  ch := Readkey;
-                 Textcolor(7);
+                 TextColor(7);
                  TextBackground(0);
                  ClrScr;
                  Case ch of
                     '0' :
                          Begin
                             DefSetts(settings);
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '1' :
                          Begin
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Settings.X := MaxX div 2;
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '2' :
                          Begin
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Settings.Y := MaxY div 2;
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '3' :
                          Begin
@@ -1104,33 +1346,37 @@ Begin
                             WriteLn('New position of Y-axis (in pixels)? (0-639 in VGA mode(default))');
                             Write('>');
                             Readln(Settings.X);
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '4' :
                          Begin
                             WriteLn('New position of X-axis (in pixels)? (0-479 in VGA mode(default))');
                             Write('>');
                             Readln(Settings.Y);
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '5' :
                          Begin
                             WriteLn('New scale? (1-65535 pixels per unit)');
                             Write('>');
                             Readln(Settings.skaal);
-                            Graphmode('screen');
+                            GraphMode('screen');
                             Asse(Settings);
-                            Txtmode('screen');
+                            TxtMode('screen');
                          End;
                     '6' :
                          Begin
                            Kleurkodes;
+{$IFNDEF LINUX}
                            Window(1,1,80,50);
-                           Textcolor(7);
+{$ELSE}
+                           Window(1,1,80,25);
+{$ENDIF}
+                           TextColor(7);
                            TextBackground(0);
                            WriteLn('New colour''s code?');
                            Write('>');
@@ -1156,39 +1402,39 @@ Begin
     SaveSettings(configfilename,settings);
 
     LogEvent('DosPlot '+version+' terminating...');
-    LogEvent(Buildstring);
-    Logevent('Settings:');
+    LogEvent(BuildString);
+    LogEvent('Settings:');
     LogEvent('Driver: '+Int2str(settings.gd)+' '+Getdrivername);
     LogEvent('Mode: '+Int2str(settings.gm)+' ' + Getmodename(settings.gm));
-    LogEvent('   '+Int2str(maxx)+'x'+Int2str(maxy));
+    LogEvent('   '+Int2str(maxX)+'x'+Int2str(maxY));
     LogEvent('   Colours: '+Int2str(getmaxcolor));
     LogEvent('Asse: X='+Int2str(settings.y)+' Y='+Int2Str(settings.X));
     LogEvent('Scale: '+Int2Str(Settings.skaal));
     If settings.linemode then
-        LogEvent('Linemode: ON  Detail='+Int2Str(settings.detail))
+        LogEvent('Linemode: ON  Detail=' + Int2Str(settings.detail))
     Else
-        LogEvent('Linemode: OFF Detail='+Int2Str(settings.detail));
+        LogEvent('Linemode: OFF Detail=' + Int2Str(settings.detail));
     LogEvent('DosPlot '+version+' terminated normally');
     LogEvent('-----------------------------------------------------------');
 End;
 {----------------------------------------------------------------------------}
-var oldmode :integer;
+var OldMode :integer;
 Begin
-   {$IFNDEF EXCEPT}
-   pcalcexception := false;
-   {$ENDIF}
-   oldmode := LastMode;
-   LogEvent('-----------------------------------------------------------');
-   DeleteScrFiles('screen');
-   Directvideo := false;
-    If (ParamStr(1) = '/?') THen
-     Begin
-       CLrScr;
-       Writeln('USAGE:');
-       Writeln(' GRAFIEK [/G]');
-       Writeln('    /G (Optional) Modify display mode');
-       Halt;
-     End;
+    {$IFNDEF EXCEPT}
+    pcalcexception := false;
+    {$ENDIF}
+    oldmode := LastMode;
+    LogEvent('-----------------------------------------------------------');
+    DeleteScrFiles('screen');
+    Directvideo := false;
+    If (ParamStr(1) = '/?') Then
+        Begin
+            ClrScr;
+            Writeln('USAGE:');
+            Writeln(' GRAFIEK [/G]');
+            Writeln('    /G (Optional) Modify display mode');
+            Halt;
+        End;
     ClrScr;
     Init;
     scrgmode := true;
@@ -1196,4 +1442,3 @@ Begin
     DeleteScrFiles('screen');
     TextMode(oldmode);
 End.
-
