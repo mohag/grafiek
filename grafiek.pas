@@ -59,8 +59,9 @@ Notes on compiling this program:
 {$ENDIF}
 {$M 65520,0,655360}
 
-Uses Graph, grafunit, pcalcexp, scrsave,crt
-{$IFDEF WIN32},windows{$ENDIF};
+Uses grafunit, pcalcexp, scrsave,crt
+{$IFDEF WIN32},windows{$ENDIF}
+{$IFDEF LINUX},ptcgraph{$ELSE},Graph{$ENDIF};
 
 Type
 {    coordintT  = Record

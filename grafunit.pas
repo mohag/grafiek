@@ -106,7 +106,8 @@ uses
     {$ifdef Win32}
         windows,
     {$endif}
-    graph,dos
+    {$ifdef LINUX}ptcgraph{$else}graph{$endif}
+    ,dos
     {$IfNDEF FPC}
         ,bgifont3,VGAdriv
     {$ENDIF};

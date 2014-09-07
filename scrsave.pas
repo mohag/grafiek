@@ -49,7 +49,9 @@ Procedure FastSave(fname : string);
 
 Implementation
 
-uses graph{$IFDEF WIN32},crt{$ENDIF};
+uses 
+   {$IFDEF LINUX}ptcgraph{$ELSE}graph{$ENDIF}
+   {$IFDEF WIN32},crt{$ENDIF};
 
 const
 {$IFDEF FPC}
